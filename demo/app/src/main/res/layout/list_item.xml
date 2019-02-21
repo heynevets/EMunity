@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <TableRow>
+        <TextView
+            android:id="@+id/sender"
+            android:textSize="18sp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/colorAccent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+        <TextView
+            android:id="@+id/data"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/colorText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+    </TableRow>
+</TableLayout>
+    <!--android:background="@color/colorPrimary"-->
+
+
+    <!--android:layout_marginStart="32dp"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/textToUpload"-->
+
+<!--<ListView-->
+<!--android:id="@+id/dataListView"-->
+<!--android:layout_width="0dp"-->
+<!--android:layout_height="0dp"-->
+<!--android:layout_marginStart="24dp"-->
+<!--android:layout_marginTop="48dp"-->
+<!--android:layout_marginEnd="24dp"-->
+<!--android:layout_marginBottom="48dp"-->
+<!--app:layout_constraintBottom_toTopOf="@+id/textToUpload"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintTop_toBottomOf="@+id/greetingText" />-->
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--&lt;!&ndash;<TextView xmlns:android="http://schemas.android.com/apk/res/android"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/g"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:background="@color/colorPrimary"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:gravity="center_vertical|center_horizontal"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textAlignment="textStart"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textSize="18sp">&ndash;&gt;-->
+
+
+    <!--&lt;!&ndash;</TextView>&ndash;&gt;-->
