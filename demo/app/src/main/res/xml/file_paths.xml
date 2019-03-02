@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:andoird="http://schemas.android.com/apk/res/android">
+    <external-path
+        name="EMunityProblemImage"
+        path="Android/data/com.tingyuyeh.a268demo/files/Pictures" />
+
+    <!--<external-files-path name="my_images" path="my_images" />-->
+
+</paths>
