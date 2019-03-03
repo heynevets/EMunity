@@ -17,12 +17,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.tingyuyeh.a268demo.models.FirebaseHelper;
 
 // Sign up page
 public class B1 extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private String DEBUG = "B1_Debug";
+    private String DEBUG = "B1_Debug_Signup";
     Button signUpButton;
     EditText emailEditText;
     EditText passwordEditText;
@@ -76,6 +77,7 @@ public class B1 extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(DEBUG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    FirebaseHelper.storeUserToDatabase("Write something about yourself...");
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.

@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.tingyuyeh.a268demo.models.FirebaseHelper;
 
 // Log in page
 public class B0 extends AppCompatActivity {

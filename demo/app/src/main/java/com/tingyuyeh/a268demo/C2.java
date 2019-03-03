@@ -69,6 +69,8 @@ public class C2 extends AppCompatActivity {
         Log.d(DEBUG, "report");
 //        FirebaseHelper.createProblem(photoURI);
         Double[] coord = {0.0, 0.0};
+        // call it with
+        // public static void createProblem(final Uri file, final Double[] coord, final String title, final String description, final Context context) {
         FirebaseHelper.createProblem(photoURI, coord, "title", "description", C2.this);
         this.finish();
     }
@@ -80,6 +82,7 @@ public class C2 extends AppCompatActivity {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, options);
+
             imageView.setImageBitmap(bitmap);
         }
     }

@@ -6,27 +6,32 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class User {
 //    public String _userId;
-    public int _totalWorkMinutes;
+    public int _totalWorkMinutes = 0;
     public String _selfIntroduction;
-    public String _idOfActiveProblem;
-    public List<String> _IdOfCompletedProblems;
-    public List<String> _IdOfFavouriteProblems;
-    public List<String> _IdOfProblemsReportedByMe;
-    public Map<String, Integer> _voteStatusForEachProblem;
-
+    public String _idOfActiveProblem = null;
+    public List<String> _IdOfCompletedProblems = new ArrayList<>();
+    public List<String> _IdOfFavouriteProblems = new ArrayList<>();
+    public List<String> _IdOfProblemsReportedByMe = new ArrayList<>();
+    public Map<String, Integer> _voteStatusForEachProblem = new HashMap<>();
+    public String _imageUri = "";
+    public String _thumbnail = "";
+    public Object _startTimeStamp;
     public User(String selfIntroduction) {
         _selfIntroduction = selfIntroduction;
-        _totalWorkMinutes = 0;
-        _idOfActiveProblem = null;
-        _IdOfCompletedProblems = new ArrayList<>();
-        _IdOfFavouriteProblems = new ArrayList<>();
-        _IdOfProblemsReportedByMe = new ArrayList<>();
-        _voteStatusForEachProblem = new HashMap<>();
+//        _totalWorkMinutes = 0;
+//        _idOfActiveProblem = null;
+//        _IdOfCompletedProblems = new ArrayList<>();
+//        _IdOfFavouriteProblems = new ArrayList<>();
+//        _IdOfProblemsReportedByMe = new ArrayList<>();
+//        _voteStatusForEachProblem = new HashMap<>();
     }
-    public User() {}
+    public User() {
+    }
 }

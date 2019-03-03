@@ -2,6 +2,7 @@ package com.tingyuyeh.a268demo;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,9 +36,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.tingyuyeh.a268demo.models.Callback;
+import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.Problem;
+import com.tingyuyeh.a268demo.models.User;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +62,7 @@ public class C0 extends AppCompatActivity {
     EditText dataField;
 
     FirebaseUser user;
-    String DEBUG = "C0_Debug";
+    String DEBUG = "C0";
 
     ListView lv;
     DataList listAdapter;
@@ -56,50 +72,23 @@ public class C0 extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference myRef;
+    DatabaseReference userRef;
+    DatabaseReference problemRef;
+
+    private StorageReference mStorageRef;
+    User retrievedUser;
 
 
-    void initializeDataList() {
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("TestData");
 
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Data value = dataSnapshot.getValue(Data.class);
-                senders.add(value.sender);
-                msgs.add(value.msg);
-                listAdapter.notifyDataSetChanged();
-                lv.setBackgroundResource(R.drawable.customshape);
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        senders = new ArrayList<>();
-        msgs = new ArrayList<>();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c0);
+
+//        FirebaseHelper.initialize();
         initializeDataList();
 
         greeting = findViewById(R.id.greetingText);
@@ -138,6 +127,21 @@ public class C0 extends AppCompatActivity {
         lv.setAdapter(listAdapter);
 //        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+
+
+        Button testButton = findViewById(R.id.testButton);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                runTest();
+            }
+        });
+
+        Button testButton2 = findViewById(R.id.testButton2);
+        testButton2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                runTest2();
+            }
+        });
     }
 
     void writeToDatabase() {
@@ -152,11 +156,11 @@ public class C0 extends AppCompatActivity {
             entry.msg = msg;
             myRef.push().setValue(entry);
             dataField.setText("");
-
-
-
         }
     }
+
+
+
     public static void hideSoftKeyboard (Activity activity, View view)
     {
         InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -187,5 +191,190 @@ public class C0 extends AppCompatActivity {
 
 
 
+    void runTest() {
+
+//        User temp = FirebaseHelper.getUser();
+//        Log.d(DEBUG, temp._selfIntroduction);
+
+//        // store user to database
+//        String userId = user.getUid();
+//        User customUser = new User("MuHAHA");
+//        userRef.child(userId).setValue(customUser);
+
+
+//        // get User from database
+//        userRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                retrievedUser = dataSnapshot.getValue(User.class);
+//                new AlertDialog.Builder(C0.this)
+//                        .setTitle(retrievedUser._selfIntroduction)
+//                        .show();
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+
+
+//        // create problem and save to database
+//        Double[] coord = {0.0, 0.0};
+//        Problem problem = new Problem(user.getUid(), coord, "hihi", "descriptttt");
+//        problemRef.push().setValue(problem);
+
+
+//        // test of image
+//        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+//        final StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+//        UploadTask uploadTask = riversRef.putFile(file);
+//        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//            @Override
+//            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                if (!task.isSuccessful()) {
+//                    throw task.getException();
+//                }
+//                // Continue with the task to get the download URL
+//                return riversRef.getDownloadUrl();
+//            }
+//        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                if (task.isSuccessful()) {
+//                    Uri downloadUri = task.getResult();
+//                    String downloadURL = downloadUri.toString();
+//                    Double[] coord = {0.0, 0.0};
+//                    Problem problem = new Problem(user.getUid(), coord, "hihi", "descriptttt", downloadURL);
+//                    problemRef.push().setValue(problem);
+//                } else {
+//                    // Handle failures
+//                    // ...
+//                }
+//            }
+//        });
+
+        // download image
+//        File localFile = File.createTempFile("images", "jpg");
+//        riversRef.getFile(localFile)
+//                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                        // Successfully downloaded data to local file
+//                        // ...
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle failed download
+//                // ...
+//            }
+//        });
+
+
+//        DateFormat dateFormat = getDateTimeInstance();
+//        Map map = new HashMap<>();
+//        map.put("timestamp", ServerValue.TIMESTAMP);
+
+//        Map map2 = new HashMap();
+//        map2.put("timestamp", ServerValue.TIMESTAMP);
+//        myRef.child("tempWorkingArea").setValue(map2);
+//
+//
+//
+//        myRef.child("tempWorkingArea").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                final Long curTime = dataSnapshot.getValue(Long.class);
+//                userRef.child(user.getUid()).child("startTimeOfCurrentActiveTask").addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Long passTime = dataSnapshot.getValue(Long.class);
+//                        Log.d(DEBUG, "passTime: " + passTime.toString());
+//                        Log.d(DEBUG, "curTime: " + curTime.toString());
+//                        Map map = new HashMap();
+//                        map.put("timestamp", ServerValue.TIMESTAMP);
+//                        userRef.child(user.getUid()).child("startTimeOfCurrentActiveTask").updateChildren(map);
+//
+//                    }
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                    }
+//                });
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+
+
+
+//        return dateFormat.format(netDate);
+//        parseToLong(temp)
+//        admin.initializeApp(functions.config().firebase)
+//        Log.d(DEBUG, admin.database.ServerValue.TIMESTAMP);
+
+// EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE
+// EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE
+// EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE
+
+
+
+
+    }
+
+    private void runTest2() {
+        Intent intent = new Intent(getApplicationContext(), C2.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+    }
+
+
+
+
+// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //
+    // not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //
+    // not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //
+
+    void initializeDataList() {
+//        FirebaseHelper.initialize();
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("TestData");
+        userRef = database.getReference("UserData");
+        problemRef = database.getReference("ProblemData");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        myRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Data value = dataSnapshot.getValue(Data.class);
+                senders.add(value.sender);
+                msgs.add(value.msg);
+                listAdapter.notifyDataSetChanged();
+                lv.setBackgroundResource(R.drawable.customshape);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        senders = new ArrayList<>();
+        msgs = new ArrayList<>();
+    }
 
 }
