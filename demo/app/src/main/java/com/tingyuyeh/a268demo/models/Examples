@@ -1,0 +1,35 @@
+        // refer to https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method/47853774
+        // get user
+        FirebaseHelper.getUser(new Callback() {
+            @Override
+            public void onCallback(User user) {
+                Log.d(DEBUG, user._selfIntroduction);
+            }
+        });
+
+
+        // get all problems
+        FirebaseHelper.getAllProblems(new Callback() {
+            @Override
+            public void onSuccess(List<Problem> problems) {
+                Log.d(DEBUG, problems.toString());
+                for (Problem p : problems) {
+                    Log.d(DEBUG, p._problemId);
+                }
+            }
+        });
+
+        // add Favourite
+        FirebaseHelper.addFavourite(Problem, new Callback(){
+            @Override
+            public void onSuccess() {
+            }
+        });
+
+        // complete Problem
+        FirebaseHelper.completeProblem(new Callback() {
+            @Override
+            public void onSuccess() {
+                Log.d(DEBUG, "success!");
+            }
+        });
