@@ -39,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
-        mProblems= FirebaseDatabase.getInstance().getReference(problems);
+        mProblems= FirebaseDatabase.getInstance().getReference("GPS");
         mProblems.push().setValue(marker);
         problemList = new ArrayList<>();
     }
@@ -58,9 +58,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     problemList.add(p);
                     for (int i = 0; i < problemList.size(); i++)
                     {
-                        LatLng latLng = new LatLng(p.GPS[0],p.GPS[1]);
+                        LatLng latLng = new LatLng(p._GPS.get(0),p._GPS.get(1));
                         if (mMap != null) {
-                            mMap.addMarker(new MarkerOptions().position(latLng).title(p.title)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                            mMap.addMarker(new MarkerOptions().position(latLng).title(p._title)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 
                         }
                     }
