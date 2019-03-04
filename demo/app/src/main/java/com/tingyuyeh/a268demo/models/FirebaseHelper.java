@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,7 +37,10 @@ import com.tingyuyeh.a268demo.ProblemList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -191,6 +195,10 @@ public class FirebaseHelper {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    public Problem getProblem(String problemId) {
+        return mapOfAllProblems.get(problemId);
     }
 
     public void registerProblemListener(ProblemList listAdapter) {
@@ -520,6 +528,63 @@ public class FirebaseHelper {
             return tcs.getTask();
         }
     }
+    public static Bitmap getBitmapFromURL(String src) throws IOException {
+//        try {
+//            URL url = new URL(src);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setDoInput(true);
+//            connection.connect();
+//            InputStream input = connection.getInputStream();
+//            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+//            return myBitmap;
+//        } catch (IOException e) {
+//            // Log exception
+//            return null;
+//        }
+        Log.d(DEBUG, "start downloading");
+        URL url = new URL(src);
+        Bitmap result = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        Log.d(DEBUG, "finish downloading");
+
+        return result;
+    }
+
+    public static class MyAsyncTask extends AsyncTask<String, Void, Bitmap> {
+        public interface TaskListener {
+            public void onFinished(Bitmap result);
+        }
+
+        // This is the reference to the associated listener
+        private final TaskListener taskListener;
+        public MyAsyncTask(TaskListener listener) {
+            // The listener reference is passed in through the constructor
+            this.taskListener = listener;
+        }
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch(IOException e) {
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // In onPostExecute we check if the listener is valid
+            if(this.taskListener != null) {
+
+                // And if it is we call the callback function on it.
+                this.taskListener.onFinished(result);
+            }
+        }
+    }
+
 }
 
 

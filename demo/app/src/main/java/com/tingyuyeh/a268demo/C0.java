@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -129,16 +130,27 @@ public class C0 extends AppCompatActivity {
         FirebaseHelper.getInstance().getAllProblems(new Callback() {
             @Override
             public void onSuccess(List<Problem> problems) {
-                listAdapter = new ProblemList (C0.this, problems);
-                FirebaseHelper.getInstance().registerProblemListener(listAdapter);
-                lv.setAdapter(listAdapter);
-                lv.setBackgroundResource(R.drawable.customshape);
+            listAdapter = new ProblemList (C0.this, problems);
+            FirebaseHelper.getInstance().registerProblemListener(listAdapter);
+            lv.setAdapter(listAdapter);
+            lv.setBackgroundResource(R.drawable.customshape);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d(DEBUG, problems.get(position)._problemId);
+                    Intent myIntent = new Intent(C0.this, C4.class);
+                    myIntent.putExtra("problemId", problems.get(position)._problemId);
+                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+                    startActivity(myIntent);
+                }
+            });
             }
         });
 
 
 
-        Button testButton = findViewById(R.id.testButton);
+
+            Button testButton = findViewById(R.id.testButton);
         testButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 runTest();
@@ -389,7 +401,7 @@ public class C0 extends AppCompatActivity {
     }
 
     private void runTest2() {
-        Intent intent = new Intent(getApplicationContext(), C2.class);
+        Intent intent = new Intent(getApplicationContext(), C4.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.nothing);
     }

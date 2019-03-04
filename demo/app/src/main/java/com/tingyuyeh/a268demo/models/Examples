@@ -25,3 +25,8 @@
                 Log.d(DEBUG,  e.getMessage());
             }
         });
+
+
+        //create problem
+        public void createProblem(final Uri file, final Double[] coord, final String title, final String description, final Context context) {
+        FirebaseHelper.getInstance().createProblem();
