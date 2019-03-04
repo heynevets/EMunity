@@ -1,6 +1,7 @@
 package com.tingyuyeh.a268demo.models;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,6 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.tingyuyeh.a268demo.C0;
+import com.tingyuyeh.a268demo.ProblemList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -175,6 +178,48 @@ public class FirebaseHelper {
     }
     public static void destroyInstance() {
         instance = null;
+    }
+
+
+    public void getAllProblems(final Callback cb) {
+        problemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cb.onSuccess(listOfProblems);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void registerProblemListener(ProblemList listAdapter) {
+        problemRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                listAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public boolean increaseVote(Problem problem) {

@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,7 +66,7 @@ public class C0 extends AppCompatActivity {
     String DEBUG = "C0";
 
     ListView lv;
-    DataList listAdapter;
+    ProblemList listAdapter;
 
     List<String> senders;
     List<String> msgs;
@@ -89,7 +90,7 @@ public class C0 extends AppCompatActivity {
         setContentView(R.layout.activity_c0);
 
 //        FirebaseHelper.initialize();
-        initializeDataList();
+//        initializeDataList();
 
         greeting = findViewById(R.id.greetingText);
         lv = findViewById(R.id.dataListView);
@@ -122,10 +123,18 @@ public class C0 extends AppCompatActivity {
 
 
 
-        listAdapter = new DataList (C0.this, senders, msgs);
 
-        lv.setAdapter(listAdapter);
 //        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        FirebaseHelper.getInstance().getAllProblems(new Callback() {
+            @Override
+            public void onSuccess(List<Problem> problems) {
+                listAdapter = new ProblemList (C0.this, problems);
+                FirebaseHelper.getInstance().registerProblemListener(listAdapter);
+                lv.setAdapter(listAdapter);
+                lv.setBackgroundResource(R.drawable.customshape);
+            }
+        });
 
 
 
@@ -168,8 +177,27 @@ public class C0 extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+//        listAdapter.registerDataSetObserver(new DataSetObserver() {
+//            @Override
+//            public void onChanged() {
+//                super.onChanged();
+//
+//                listAdapter.notifyDataSetChanged();
+//            }
+//        });
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+
+
+
 
 
         if (user != null) {
@@ -193,6 +221,9 @@ public class C0 extends AppCompatActivity {
 
 
     void runTest() {
+
+
+
 
 //        User temp = FirebaseHelper.getUser();
 //        Log.d(DEBUG, temp._selfIntroduction);
@@ -348,10 +379,12 @@ public class C0 extends AppCompatActivity {
 //            }
 //        });
 
+//        // get Active problem
+//        FirebaseHelper.getInstance().getActiveProblem()._problemId
 
-        Log.d(DEBUG, FirebaseHelper.getInstance().getActiveProblem()._problemId);
 
-//        FirebaseHelper.getInstance().
+
+
 
     }
 
@@ -368,47 +401,47 @@ public class C0 extends AppCompatActivity {
     // not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //
     // not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //// not using //
 
-    void initializeDataList() {
-//        FirebaseHelper.initialize();
-
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("TestData");
-        userRef = database.getReference("UserData");
-        problemRef = database.getReference("ProblemData");
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Data value = dataSnapshot.getValue(Data.class);
-                senders.add(value.sender);
-                msgs.add(value.msg);
-                listAdapter.notifyDataSetChanged();
-                lv.setBackgroundResource(R.drawable.customshape);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        senders = new ArrayList<>();
-        msgs = new ArrayList<>();
-    }
+//    void initializeDataList() {
+////        FirebaseHelper.initialize();
+//
+//        database = FirebaseDatabase.getInstance();
+//        myRef = database.getReference("TestData");
+//        userRef = database.getReference("UserData");
+//        problemRef = database.getReference("ProblemData");
+//        mStorageRef = FirebaseStorage.getInstance().getReference();
+//
+//        myRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                Data value = dataSnapshot.getValue(Data.class);
+//                senders.add(value.sender);
+//                msgs.add(value.msg);
+//                listAdapter.notifyDataSetChanged();
+//                lv.setBackgroundResource(R.drawable.customshape);
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//        senders = new ArrayList<>();
+//        msgs = new ArrayList<>();
+//    }
 
 }
