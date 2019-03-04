@@ -9,9 +9,20 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
+//added by Sneha on 03/04
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+//added by Sneha
+
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+???        mDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
 
+        Intent i=new Intent(MainActivity.this,MapsActivity.class);
+        startActivity(i);
 
         Thread timer= new Thread()
         {
