@@ -40,7 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
         mProblems= FirebaseDatabase.getInstance().getReference("GPS");
-        mProblems.push().setValue(marker);
+       // mProblems.push().setValue(marker);
         problemList = new ArrayList<>();
     }
 
@@ -64,8 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
                     }
-                    //LatLng location=new LatLng(user.latitude,user.longitude);
-                    //mMap.addMarker(new MarkerOptions().position(location).title(user.name)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 }
             }
 

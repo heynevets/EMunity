@@ -1,26 +1,18 @@
 package com.tingyuyeh.a268demo;
 
 import android.content.Intent;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
-
-//added by Sneha on 03/04
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+//added by Sneha on 03/04
 //added by Sneha
 
-import com.tingyuyeh.a268demo.models.FirebaseHelper;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+abstract class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private DatabaseReference mDatabase;
 
@@ -31,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-???        mDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
+     mDatabase= FirebaseDatabase.getInstance().getReference().child("GPS");
 
         Intent i=new Intent(MainActivity.this,MapsActivity.class);
         startActivity(i);
