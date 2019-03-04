@@ -1,59 +1,29 @@
 package com.tingyuyeh.a268demo;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 import com.tingyuyeh.a268demo.models.Problem;
 import com.tingyuyeh.a268demo.models.User;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class C0 extends AppCompatActivity {
     Button logOutButton;
@@ -92,10 +62,8 @@ public class C0 extends AppCompatActivity {
 //        FirebaseHelper.initialize();
 //        initializeDataList();
 
-        greeting = findViewById(R.id.greetingText);
         lv = findViewById(R.id.dataListView);
-        dataField = findViewById(R.id.textToUpload);
-        writeButton = findViewById(R.id.writeButton);
+
         writeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -104,18 +72,7 @@ public class C0 extends AppCompatActivity {
             }
         });
 
-        logOutButton = findViewById(R.id.logOutButton);
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
 
-                logout();
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(getApplicationContext(), A1.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-
-            }
-        });
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 //        user = FirebaseAuth.getInstance().getCurrentUser();
@@ -138,19 +95,7 @@ public class C0 extends AppCompatActivity {
 
 
 
-        Button testButton = findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                runTest();
-            }
-        });
 
-        Button testButton2 = findViewById(R.id.testButton2);
-        testButton2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                runTest2();
-            }
-        });
     }
 
     void writeToDatabase() {
