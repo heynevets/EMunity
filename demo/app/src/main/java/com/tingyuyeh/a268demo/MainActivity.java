@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
+import com.tingyuyeh.a268demo.models.FirebaseHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

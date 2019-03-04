@@ -97,6 +97,7 @@ public class B0 extends AppCompatActivity {
         if (user == null) {
             // do something
         } else {
+            FirebaseHelper.getInstance();
             Intent intent = new Intent(getApplicationContext(), C0.class);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.nothing);

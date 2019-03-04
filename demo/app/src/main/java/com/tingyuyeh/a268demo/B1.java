@@ -16,8 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.User;
 
 // Sign up page
 public class B1 extends AppCompatActivity {
@@ -77,7 +80,8 @@ public class B1 extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(DEBUG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    FirebaseHelper.storeUserToDatabase("Write something about yourself...");
+//                                    FirebaseHelper.storeUserToDatabase("Write something about yourself...");
+                                    createNewUser(user);
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -102,10 +106,19 @@ public class B1 extends AppCompatActivity {
         if (user == null) {
             // display error
         } else {
+            FirebaseHelper.getInstance();
             Intent intent = new Intent(getApplicationContext(), C0.class);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.nothing);
         }
+    }
+
+    void createNewUser(FirebaseUser user) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("UserData");
+        String userId = user.getUid();
+        User customUser = new User("Write something about yourself...");
+        userRef.child(userId).setValue(customUser);
     }
 
 }

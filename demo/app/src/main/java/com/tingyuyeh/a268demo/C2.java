@@ -71,8 +71,9 @@ public class C2 extends AppCompatActivity {
         Double[] coord = {0.0, 0.0};
         // call it with
         // public static void createProblem(final Uri file, final Double[] coord, final String title, final String description, final Context context) {
-        FirebaseHelper.createProblem(photoURI, coord, "title", "description", C2.this);
+        FirebaseHelper.getInstance().createProblem(photoURI, coord, "title", "description", C2.this);
         this.finish();
+
     }
 
     @Override

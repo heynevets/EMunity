@@ -16,9 +16,9 @@ public class User {
     public int _totalWorkMinutes = 0;
     public String _selfIntroduction;
     public String _idOfActiveProblem = null;
-    public List<String> _IdOfCompletedProblems = new ArrayList<>();
-    public List<String> _IdOfFavouriteProblems = new ArrayList<>();
-    public List<String> _IdOfProblemsReportedByMe = new ArrayList<>();
+    public List<String> _idOfCompletedProblems = new ArrayList<>();
+    public List<String> _idOfFavouriteProblems = new ArrayList<>();
+    public List<String> _idOfProblemsReportedByMe = new ArrayList<>();
     public Map<String, Integer> _voteStatusForEachProblem = new HashMap<>();
     public String _imageUri = "";
     public String _thumbnail = "";

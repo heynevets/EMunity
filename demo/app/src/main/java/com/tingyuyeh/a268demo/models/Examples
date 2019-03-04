@@ -1,35 +1,27 @@
-        // refer to https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method/47853774
-        // get user
-        FirebaseHelper.getUser(new Callback() {
-            @Override
-            public void onCallback(User user) {
-                Log.d(DEBUG, user._selfIntroduction);
-            }
-        });
-
 
         // get all problems
-        FirebaseHelper.getAllProblems(new Callback() {
-            @Override
-            public void onSuccess(List<Problem> problems) {
-                Log.d(DEBUG, problems.toString());
-                for (Problem p : problems) {
-                    Log.d(DEBUG, p._problemId);
-                }
-            }
-        });
+        List<Problem> problems = FirebaseHelper.getInstance().getAllProblems();
 
         // add Favourite
-        FirebaseHelper.addFavourite(Problem, new Callback(){
-            @Override
-            public void onSuccess() {
-            }
-        });
+        FirebaseHelper.getInstance().addFavourite(problems.get(0));
+
+        // Add active
+        FirebaseHelper.getInstance().addActive(problems.get(0));
 
         // complete Problem
-        FirebaseHelper.completeProblem(new Callback() {
+        FirebaseHelper.getInstance().completeProblem();
+
+        // Vote Problem
+        FirebaseHelper.getInstance().increaseVote(problems.get(0));
+
+        // get Active Minute
+        FirebaseHelper.getInstance().getActiveMinute(new Callback() {
             @Override
-            public void onSuccess() {
-                Log.d(DEBUG, "success!");
+            public void onSuccess(int activeMinute) {
+                Log.d(DEBUG, "current active: " + activeMinute);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(DEBUG,  e.getMessage());
             }
         });

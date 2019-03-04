@@ -187,6 +187,7 @@ public class C0 extends AppCompatActivity {
     private void logout() {
         Log.i(DEBUG, "log out");
         mAuth.signOut();
+        FirebaseHelper.destroyInstance();
     }
 
 
@@ -316,8 +317,41 @@ public class C0 extends AppCompatActivity {
 // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE
 // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE // EXAMPLE
 
+        // refer to https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method/47853774
+        // get user
+
+//
+//        // get all problems
+//        List<Problem> problems = FirebaseHelper.getInstance().getAllProblems();
+//
+//        // add Favourite
+//        FirebaseHelper.getInstance().addFavourite(problems.get(0));
+//
+//        // Add active
+//        FirebaseHelper.getInstance().addActive(problems.get(0));
+//
+//        // complete Problem
+//        FirebaseHelper.getInstance().completeProblem();
+//
+//        // Vote Problem
+//        FirebaseHelper.getInstance().increaseVote(problems.get(0));
+//
+//        // get Active Minute
+//        FirebaseHelper.getInstance().getActiveMinute(new Callback() {
+//            @Override
+//            public void onSuccess(int activeMinute) {
+//                Log.d(DEBUG, "current active: " + activeMinute);
+//            }
+//            @Override
+//            public void onFailure(Exception e) {
+//                Log.d(DEBUG,  e.getMessage());
+//            }
+//        });
 
 
+        Log.d(DEBUG, FirebaseHelper.getInstance().getActiveProblem()._problemId);
+
+//        FirebaseHelper.getInstance().
 
     }
 
