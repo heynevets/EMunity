@@ -1,17 +1,20 @@
 package com.tingyuyeh.a268demo;
 
 import android.content.Intent;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 
-import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity {
+//added by Sneha on 03/04
+//added by Sneha
+
+abstract class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+     mDatabase= FirebaseDatabase.getInstance().getReference().child("GPS");
 
+        Intent i=new Intent(MainActivity.this,MapsActivity.class);
+        startActivity(i);
 
         Thread timer= new Thread()
         {
