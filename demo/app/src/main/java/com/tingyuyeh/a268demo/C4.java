@@ -38,7 +38,7 @@ public class C4 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_c4);
+        setContentView(R.layout.c4test);
 
         button_up = findViewById(R.id.button_up);
         button_down = findViewById(R.id.button_down);
@@ -112,6 +112,7 @@ public class C4 extends AppCompatActivity {
 
 
     }
+
 
     void updateVoteButtons() {
         User user = FirebaseHelper.getInstance().getUser();

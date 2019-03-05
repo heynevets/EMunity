@@ -118,7 +118,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     @Override
     protected void onResume() {
         super.onResume();
-
+        listAdapter.notifyDataSetChanged();
     }
 
     @Override
