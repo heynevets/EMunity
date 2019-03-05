@@ -1,6 +1,8 @@
 package com.tingyuyeh.a268demo;
 
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +32,7 @@ public class C4 extends AppCompatActivity {
 
     Button button_action;
 
+    ImageButton button_favourite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,8 @@ public class C4 extends AppCompatActivity {
         problem = FirebaseHelper.getInstance().getProblem(problemId);
 
         button_action = findViewById(R.id.button_action);
+
+        button_favourite = findViewById(R.id.button_favourite);
     }
 
     @Override
@@ -98,15 +103,49 @@ public class C4 extends AppCompatActivity {
         task.execute(problem._imageUri);
 
         updateActionButton();
+        updateFavouriteButton();
+
+
+    }
+    void updateFavouriteButton() {
+        User user = FirebaseHelper.getInstance().getUser();
+        if (user._idOfFavouriteProblems.contains(problem._problemId)) {
+            // set yellow
+            button_favourite.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+            button_favourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseHelper.getInstance().removeFavourite(problem);
+                    updateFavouriteButton();
+                }
+            });
+        } else {
+            button_favourite.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
+            button_favourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseHelper.getInstance().addFavourite(problem);
+                    updateFavouriteButton();
+                }
+            });
+        }
 
     }
     void updateActionButton() {
         User user = FirebaseHelper.getInstance().getUser();
-        if (problem._problemId.equals(user._idOfActiveProblem)) {
-            setButtonCompleteProblem();
+        if (user._idOfCompletedProblems.contains(problem._problemId)) {
+            setTaskAlreadyCompleteButton();
         } else {
-            setButtonAddActive();
+            if (problem._problemId.equals(user._idOfActiveProblem)) {
+                setButtonCompleteProblem();
+            } else {
+                setButtonAddActive();
+            }
         }
+    }
+    void setTaskAlreadyCompleteButton() {
+        button_action.setText("Completed");
+        button_action.setEnabled(false);
     }
     void setButtonAddActive() {
         button_action.setText("Start Problem");
@@ -131,7 +170,7 @@ public class C4 extends AppCompatActivity {
                     @Override
                     public void onComplete(boolean success) {
                         if (success) {
-                            setButtonAddActive();
+                            setTaskAlreadyCompleteButton();
                         }
                     }
                 });

@@ -99,16 +99,22 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 retrievedUser = dataSnapshot.getValue(User.class);
-                cb.onComplete(true);
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                cb.onComplete(false);
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         mapOfAllProblems = new HashMap<>();
         listOfProblems = new ArrayList<>();
+        problemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                cb.onComplete(true);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
         problemRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -293,6 +299,15 @@ public class FirebaseHelper {
             return false;
         }
     }
+    public boolean removeFavourite(Problem problem) {
+        if (retrievedUser._idOfFavouriteProblems.contains(problem._problemId)) {
+            retrievedUser._idOfFavouriteProblems.remove(problem._problemId);
+            userRef.child(user.getUid()).setValue(retrievedUser);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean addActive(Problem problem) {
         if (retrievedUser._idOfActiveProblem == null) {
@@ -305,17 +320,19 @@ public class FirebaseHelper {
         }
 
     }
+
     public void completeProblem(Callback cb) {
         if (retrievedUser._idOfActiveProblem != null) {
             getActiveMinute(new Callback() {
                 @Override
                 public void onSuccess(int activeMinute) {
                     retrievedUser._totalWorkMinutes += activeMinute;
-                    retrievedUser._idOfActiveProblem = null;
                     retrievedUser._startTimeStamp = null;
                     if (!retrievedUser._idOfCompletedProblems.contains(retrievedUser._idOfActiveProblem)) {
+                        Log.d(DEBUG, "add to completedProblems");
                         retrievedUser._idOfCompletedProblems.add(retrievedUser._idOfActiveProblem);
                     }
+                    retrievedUser._idOfActiveProblem = null;
 
                     userRef.child(user.getUid()).setValue(retrievedUser)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -403,6 +420,8 @@ public class FirebaseHelper {
     }
     public Problem getActiveProblem() {
         String id = retrievedUser._idOfActiveProblem;
+//        Log.d(DEBUG, id);
+//        Log.d(DEBUG, mapOfAllProblems.get(id)._problemId);
         return mapOfAllProblems.containsKey(id) ? mapOfAllProblems.get(id) : null;
     }
 

@@ -71,7 +71,8 @@
         </provider>
 
         <activity android:name=".C4" />
-        <activity android:name=".C3"></activity>
+        <activity android:name=".C3" />
+        <activity android:name=".C1"></activity>
     </application>
 
 </manifest>

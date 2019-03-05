@@ -33,6 +33,7 @@ public class ProblemList extends ArrayAdapter<Problem> {
         problems.add(p);
     }
 
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
@@ -41,9 +42,6 @@ public class ProblemList extends ArrayAdapter<Problem> {
         TextView title = rowView.findViewById(R.id.title);
         TextView description = rowView.findViewById(R.id.description);
         TextView vote = rowView.findViewById(R.id.textView_vote);
-
-
-
 
         Problem p = problems.get(position);
         title.setText(p._title);
