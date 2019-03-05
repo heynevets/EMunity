@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 
 // Log in page
@@ -26,7 +27,7 @@ public class B0 extends AppCompatActivity {
     EditText emailEditText;
     EditText passwordEditText;
     KProgressHUD hud;
-    private String DEBUG = "B0 Debug";
+    private String DEBUG = "B0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,10 +98,16 @@ public class B0 extends AppCompatActivity {
         if (user == null) {
             // do something
         } else {
-            FirebaseHelper.getInstance();
-            Intent intent = new Intent(getApplicationContext(), C0.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+
+            FirebaseHelper.initialize(new Callback() {
+                @Override
+                public void onComplete(boolean success) {
+                    Intent intent = new Intent(getApplicationContext(), C3.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+                }
+            });
+
         }
 
     }

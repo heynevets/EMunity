@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 import com.tingyuyeh.a268demo.models.User;
 
@@ -106,10 +107,16 @@ public class B1 extends AppCompatActivity {
         if (user == null) {
             // display error
         } else {
-            FirebaseHelper.getInstance();
-            Intent intent = new Intent(getApplicationContext(), C0.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+
+            FirebaseHelper.initialize(new Callback() {
+                @Override
+                public void onComplete(boolean success) {
+                    Intent intent = new Intent(getApplicationContext(), C0.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+                }
+            });
+
         }
     }
 

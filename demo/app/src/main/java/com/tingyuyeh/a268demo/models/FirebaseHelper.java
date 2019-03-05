@@ -84,7 +84,7 @@ public class FirebaseHelper {
     private Map<String, Problem> mapOfAllProblems;
 
     static private FirebaseHelper instance = null;
-    private FirebaseHelper() {
+    private FirebaseHelper(Callback cb) {
         // initialize
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("UserData");
@@ -99,9 +99,11 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 retrievedUser = dataSnapshot.getValue(User.class);
+                cb.onComplete(true);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                cb.onComplete(false);
             }
         });
 
@@ -170,21 +172,32 @@ public class FirebaseHelper {
 
     }
 
-    public static FirebaseHelper getInstance() {
+    public static void initialize(Callback cb) {
         if (instance == null) {
-            instance = new FirebaseHelper();
+            instance = new FirebaseHelper(cb);
         }
+    }
+    public static FirebaseHelper getInstance() {
+
         return instance;
     }
 
     public User getUser() {
         return retrievedUser;
     }
+
+    public void logout() {
+        mAuth.signOut();
+        FirebaseHelper.destroyInstance();
+    }
+
     public static void destroyInstance() {
         instance = null;
     }
 
-
+    public String getEmail() {
+        return user.getEmail();
+    }
     public void getAllProblems(final Callback cb) {
         problemRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -292,7 +305,7 @@ public class FirebaseHelper {
         }
 
     }
-    public void completeProblem() {
+    public void completeProblem(Callback cb) {
         if (retrievedUser._idOfActiveProblem != null) {
             getActiveMinute(new Callback() {
                 @Override
@@ -303,9 +316,18 @@ public class FirebaseHelper {
                     if (!retrievedUser._idOfCompletedProblems.contains(retrievedUser._idOfActiveProblem)) {
                         retrievedUser._idOfCompletedProblems.add(retrievedUser._idOfActiveProblem);
                     }
-                    userRef.child(user.getUid()).setValue(retrievedUser);
+
+                    userRef.child(user.getUid()).setValue(retrievedUser)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                cb.onComplete(true);
+                            }
+                        });
                 }
             });
+        } else {
+            cb.onComplete(false);
         }
     }
 

@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 import com.tingyuyeh.a268demo.models.Problem;
+import com.tingyuyeh.a268demo.models.User;
 
 import java.io.IOException;
 
@@ -24,6 +27,9 @@ public class C4 extends AppCompatActivity {
     TextView text_description;
     TextView text_vote;
     ImageView image;
+
+    Button button_action;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +48,7 @@ public class C4 extends AppCompatActivity {
         problemId = getIntent().getStringExtra("problemId");
         problem = FirebaseHelper.getInstance().getProblem(problemId);
 
+        button_action = findViewById(R.id.button_action);
     }
 
     @Override
@@ -52,15 +59,29 @@ public class C4 extends AppCompatActivity {
         button_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseHelper.getInstance().increaseVote(problem);
-                setVoteText();
+                if (FirebaseHelper.getInstance().increaseVote(problem)) {
+                    Toast.makeText(C4.this, "Up vote completed",
+                            Toast.LENGTH_SHORT).show();
+                    setVoteText();
+                } else {
+                    Toast.makeText(C4.this, "You can only up vote once for each problem",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         button_down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseHelper.getInstance().decreaseVote(problem);
-                setVoteText();
+                if (FirebaseHelper.getInstance().decreaseVote(problem)) {
+                    Toast.makeText(C4.this, "Down vote completed",
+                            Toast.LENGTH_SHORT).show();
+                    setVoteText();
+                } else {
+                    Toast.makeText(C4.this, "You can only down vote once for each problem",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -76,7 +97,48 @@ public class C4 extends AppCompatActivity {
         });
         task.execute(problem._imageUri);
 
+        updateActionButton();
+
     }
+    void updateActionButton() {
+        User user = FirebaseHelper.getInstance().getUser();
+        if (problem._problemId.equals(user._idOfActiveProblem)) {
+            setButtonCompleteProblem();
+        } else {
+            setButtonAddActive();
+        }
+    }
+    void setButtonAddActive() {
+        button_action.setText("Start Problem");
+        button_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FirebaseHelper.getInstance().addActive(problem)) {
+                    setButtonCompleteProblem();
+                } else {
+                    Toast.makeText(C4.this, "Please finish your current active task",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    void setButtonCompleteProblem() {
+        button_action.setText("Complete Problem");
+        button_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseHelper.getInstance().completeProblem(new Callback() {
+                    @Override
+                    public void onComplete(boolean success) {
+                        if (success) {
+                            setButtonAddActive();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     void setVoteText() {
         String voting = (problem._ratings >= 0) ? "+" + problem._ratings : "-" + problem._ratings;
         text_vote.setText(voting);

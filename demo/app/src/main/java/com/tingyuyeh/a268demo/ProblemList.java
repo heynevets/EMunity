@@ -40,11 +40,18 @@ public class ProblemList extends ArrayAdapter<Problem> {
         ImageView thumbnail = rowView.findViewById(R.id.thumbnail);
         TextView title = rowView.findViewById(R.id.title);
         TextView description = rowView.findViewById(R.id.description);
+        TextView vote = rowView.findViewById(R.id.textView_vote);
+
+
+
 
         Problem p = problems.get(position);
         title.setText(p._title);
         description.setText(p._description);
         thumbnail.setImageBitmap(FirebaseHelper.decodeImage(p._thumbnail));
+
+        String voting = (p._ratings >= 0) ? "+" + p._ratings : "-" + p._ratings;
+        vote.setText(voting);
 
         return rowView;
     }

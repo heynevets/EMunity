@@ -72,7 +72,6 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
             listAdapter = new ProblemList (C0.this, problems);
             FirebaseHelper.getInstance().registerProblemListener(listAdapter);
             lv.setAdapter(listAdapter);
-            lv.setBackgroundResource(R.drawable.customshape);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
