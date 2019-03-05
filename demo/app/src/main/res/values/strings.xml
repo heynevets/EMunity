@@ -3,4 +3,7 @@
     <!--<string name="title_activity_maps">Map</string>-->
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_maps2">Map</string>
+    <string name="c2_title_hint"> Problem Title </string>
+    <string name="c2_description_hint"> Problem Description </string>
+    <string name="c2_report_problem"> Report Problem </string>
 </resources>
