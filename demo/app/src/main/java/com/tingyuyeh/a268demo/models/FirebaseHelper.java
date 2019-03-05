@@ -425,9 +425,16 @@ public class FirebaseHelper {
         return mapOfAllProblems.containsKey(id) ? mapOfAllProblems.get(id) : null;
     }
 
+
+
+
     public void createProblem(final Uri file, final Double[] coord, final String title, final String description, final Context context) {
         final StorageReference storeRef = mStorageRef.child("images/" + user.getUid() + "/" + file.getPath());
-        UploadTask uploadTask = storeRef.putFile(file);
+
+        UploadTask uploadTask = storeRef.putFile(file); // by uri
+//        UploadTask uploadTask = storeRef.putBytes(compressFileByUri(context, file)); // by byte[]
+
+
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -487,6 +494,31 @@ public class FirebaseHelper {
         }
         return null;
     }
+
+    private static byte[] compressFileByUri(Context context, Uri file) {
+
+        final InputStream imageStream;
+
+        try {
+            imageStream = context.getContentResolver().openInputStream(file);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            selectedImage.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] data = baos.toByteArray();
+
+            return data;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
+
 
 // Refer to https://stackoverflow.com/questions/37215071/firebase-android-how-to-read-from-different-references-sequentially/40557237
     public void getActiveMinute(final Callback cb) {
@@ -610,11 +642,16 @@ public class FirebaseHelper {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
+                int nh = (int) ( myBitmap.getHeight() * (800.0 / myBitmap.getWidth()) );
+                Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 600, nh, true);
+                return scaled;
+//                return myBitmap;
             } catch(IOException e) {
                 return null;
             }
         }
+
+
         @Override
         protected void onPostExecute(Bitmap result) {
             // In onPostExecute we check if the listener is valid
