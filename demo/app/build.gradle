@@ -37,7 +37,12 @@ dependencies {
     implementation 'com.kaopiz:kprogresshud:1.2.0'
 
     implementation 'com.google.firebase:firebase-storage:16.1.0'
+//    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-base:16.1.0'
 
-
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
+
+

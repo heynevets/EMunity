@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 //added by Sneha on 03/04
 //added by Sneha
 
-abstract class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
@@ -23,10 +23,10 @@ abstract class MainActivity extends AppCompatActivity implements View.OnClickLis
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-     mDatabase= FirebaseDatabase.getInstance().getReference().child("GPS");
+//     mDatabase= FirebaseDatabase.getInstance().getReference().child("GPS");
 
-        Intent i=new Intent(MainActivity.this,MapsActivity.class);
-        startActivity(i);
+//        Intent i=new Intent(MainActivity.this,MapsActivity.class);
+//        startActivity(i);
 
         Thread timer= new Thread()
         {
@@ -46,6 +46,7 @@ abstract class MainActivity extends AppCompatActivity implements View.OnClickLis
                 {
                     //Goes to Activity  StartingPoint.java(STARTINGPOINT)
                     Intent intent = new Intent(getApplicationContext(), A1.class);
+//                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.nothing);
 
