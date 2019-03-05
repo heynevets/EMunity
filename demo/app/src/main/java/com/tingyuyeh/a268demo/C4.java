@@ -113,7 +113,12 @@ public class C4 extends AppCompatActivity {
 
     void updateVoteButtons() {
         User user = FirebaseHelper.getInstance().getUser();
-        int voteStatus = user._voteStatusForEachProblem.get(problemId);
+
+        int voteStatus = 0;
+        if (user._voteStatusForEachProblem.containsKey(problemId)) {
+            user._voteStatusForEachProblem.get(problemId);
+        }
+
         if (voteStatus == 0) {
             button_up.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
             button_down.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
