@@ -23,8 +23,8 @@ public class C4 extends AppCompatActivity {
 
     String problemId;
     Problem problem;
-    Button button_up;
-    Button button_down;
+    ImageButton button_up;
+    ImageButton button_down;
     TextView text_title;
     TextView text_description;
     TextView text_vote;
@@ -60,7 +60,7 @@ public class C4 extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
+        updateVoteButtons();
         button_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +68,7 @@ public class C4 extends AppCompatActivity {
                     Toast.makeText(C4.this, "Up vote completed",
                             Toast.LENGTH_SHORT).show();
                     setVoteText();
+                    updateVoteButtons();
                 } else {
                     Toast.makeText(C4.this, "You can only up vote once for each problem",
                             Toast.LENGTH_SHORT).show();
@@ -82,9 +83,11 @@ public class C4 extends AppCompatActivity {
                     Toast.makeText(C4.this, "Down vote completed",
                             Toast.LENGTH_SHORT).show();
                     setVoteText();
+                    updateVoteButtons();
                 } else {
                     Toast.makeText(C4.this, "You can only down vote once for each problem",
                             Toast.LENGTH_SHORT).show();
+
                 }
 
             }
@@ -107,6 +110,22 @@ public class C4 extends AppCompatActivity {
 
 
     }
+
+    void updateVoteButtons() {
+        User user = FirebaseHelper.getInstance().getUser();
+        int voteStatus = user._voteStatusForEachProblem.get(problemId);
+        if (voteStatus == 0) {
+            button_up.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
+            button_down.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
+        } else if (voteStatus == -1) {
+            button_up.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
+            button_down.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        } else {
+            button_up.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+            button_down.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
     void updateFavouriteButton() {
         User user = FirebaseHelper.getInstance().getUser();
         if (user._idOfFavouriteProblems.contains(problem._problemId)) {
