@@ -102,7 +102,7 @@ public class B0 extends AppCompatActivity {
             FirebaseHelper.initialize(new Callback() {
                 @Override
                 public void onComplete(boolean success) {
-                    Intent intent = new Intent(getApplicationContext(), C0.class);
+                    Intent intent = new Intent(getApplicationContext(), C1.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.nothing);
                 }

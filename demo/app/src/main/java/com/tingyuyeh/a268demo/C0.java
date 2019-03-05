@@ -120,7 +120,10 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
         googleMap.setOnMarkerClickListener(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-        LatLng sydney = new LatLng(-33.852, 151.211);
+        List<Problem> lp = FirebaseHelper.getInstance().getAllProblems();
+
+
+        LatLng sydney = new LatLng(-63.852, 151.211);
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title("Marker in Sydney"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
