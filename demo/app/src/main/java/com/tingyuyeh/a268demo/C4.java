@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -31,6 +32,7 @@ public class C4 extends AppCompatActivity {
     ImageView image;
 
     Button button_action;
+    final String DEBUG = "C4";
 
     ImageButton button_favourite;
     @Override
@@ -116,9 +118,9 @@ public class C4 extends AppCompatActivity {
 
         int voteStatus = 0;
         if (user._voteStatusForEachProblem.containsKey(problemId)) {
-            user._voteStatusForEachProblem.get(problemId);
+            voteStatus = user._voteStatusForEachProblem.get(problemId);
         }
-
+        Log.d(DEBUG, "votestatus:" + voteStatus);
         if (voteStatus == 0) {
             button_up.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);
             button_down.setColorFilter(ContextCompat.getColor(this, R.color.colorText), PorterDuff.Mode.SRC_IN);

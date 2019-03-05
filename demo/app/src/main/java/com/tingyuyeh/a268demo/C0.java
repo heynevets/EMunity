@@ -4,9 +4,15 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,7 +49,9 @@ import com.tingyuyeh.a268demo.models.Problem;
 import com.tingyuyeh.a268demo.models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class C0 extends AppCompatActivity implements OnMapReadyCallback,LocationListener,GoogleMap.OnMarkerClickListener {
@@ -50,6 +59,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     String DEBUG = "C0";
     ListView lv;
     ProblemList listAdapter;
+    Map<String, Marker> markerMap = new HashMap<>();
 
 // from sneha
 
@@ -66,25 +76,31 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
         setContentView(R.layout.activity_c0);
         lv = findViewById(R.id.dataListView);
 
-        FirebaseHelper.getInstance().getAllProblems(new Callback() {
+//        FirebaseHelper.getInstance().getAllProblems(new Callback() {
+//            @Override
+//            public void onSuccess(List<Problem> problems) {
+//
+//            }
+//        });
+        List<Problem> problems = FirebaseHelper.getInstance().getAllProblems();
+        listAdapter = new ProblemList (C0.this, problems);
+        FirebaseHelper.getInstance().registerProblemListener(listAdapter);
+        lv.setAdapter(listAdapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onSuccess(List<Problem> problems) {
-            listAdapter = new ProblemList (C0.this, problems);
-            FirebaseHelper.getInstance().registerProblemListener(listAdapter);
-            lv.setAdapter(listAdapter);
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d(DEBUG, problems.get(position)._problemId);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(DEBUG, "currentPos:" + position);
+                if (listAdapter.getItemSelected() != null && listAdapter.getItemSelected().equals(position)) {
                     Intent myIntent = new Intent(C0.this, C4.class);
                     myIntent.putExtra("problemId", problems.get(position)._problemId);
                     overridePendingTransition(R.anim.fade_in, R.anim.nothing);
                     startActivity(myIntent);
+                } else {
+                    zoomInProblem(position);
                 }
-            });
+
             }
         });
-
         // from sneha
 
 // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -111,51 +127,60 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     }
 
 
+    private void zoomInProblem(int position) {
+        List<Problem> problems = FirebaseHelper.getInstance().getAllProblems();
+        Problem p = problems.get(position);
 
+        LatLng coord = new LatLng(p._GPS.get(0), p._GPS.get(1));
+
+        markerMap.get(p._problemId).showInfoWindow();
+
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
+        lv.smoothScrollToPosition(position);
+
+        listAdapter.setItemSelected(position);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        googleMap.setOnMarkerClickListener(this);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         List<Problem> lp = FirebaseHelper.getInstance().getAllProblems();
 
-
-        LatLng sydney = new LatLng(-63.852, 151.211);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//
-//        mProblems.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot s : dataSnapshot.getChildren()){
-//                    Problem p = s.getValue(Problem.class);
-//
-//                    problemList.add(p);
-//                    for (int i = 0; i < problemList.size(); i++)
-//                    {
-//                        LatLng latLng = new LatLng(p._GPS.get(0),p._GPS.get(1));
-//                        if (mMap != null) {
-//                            mMap.addMarker(new MarkerOptions().position(latLng).title(p._title)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-//
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
+        LatLng coord = new LatLng(37.3496, 121.9390);
+        for (Problem p : lp) {
+            coord = new LatLng(p._GPS.get(0), p._GPS.get(1));
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(coord)
+                    .title(p._title)
+                    .snippet(String.format("%d people voted", p._ratings))
+                    .anchor(0.5f, 1)
+            );
+            marker.setTag(p);
+            markerMap.put(p._problemId, marker);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 12));
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+
+        Problem p = (Problem) marker.getTag();
+        int position = listAdapter.getItemPosition(p._problemId);
+        marker.showInfoWindow();
+
+        Log.d(DEBUG, "scroll to : " + position);
+
+        zoomInProblem(position);
+
         return false;
     }
 
