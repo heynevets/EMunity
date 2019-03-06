@@ -76,6 +76,18 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
         setContentView(R.layout.activity_c0);
         lv = findViewById(R.id.dataListView);
 
+
+        // create intent for C2
+        Intent intent = new Intent(getApplicationContext(), C3.class);
+        //intent.putExtra("message", "C0");
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+
+
+
+
+
+
 //        FirebaseHelper.getInstance().getAllProblems(new Callback() {
 //            @Override
 //            public void onSuccess(List<Problem> problems) {

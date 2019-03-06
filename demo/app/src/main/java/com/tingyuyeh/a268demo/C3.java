@@ -32,6 +32,15 @@ public class C3 extends AppCompatActivity {
         textView_totalTime = findViewById(R.id.textView_totalTime);
         profile_img = findViewById(R.id.profile_image);
         button_logout = findViewById(R.id.button_logout);
+
+        profile_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pictureIntent = new Intent(getApplicationContext(), C2.class);
+                pictureIntent.putExtra("message", "C3");
+                startActivity(pictureIntent);
+            }
+        });
     }
 
     @Override

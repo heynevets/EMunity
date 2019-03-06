@@ -45,90 +45,78 @@ public class GPS_Tracker extends Service implements LocationListener {
     }
 
     public Location getLocation() {
-        try {
-            // initialize the location manager
-            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-
-            // get the GPS status
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            // get the network status
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            // check if GPS or network providers are available
-            if(!isGPSEnabled && !isNetworkEnabled) {
-                showSettingsAlert();
-            }
-            else {
-                canGetLocation = true;
-                // First get the location from the network provider
-                if(isNetworkEnabled) {
+        // initialize the location manager
+        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        // get the GPS status
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // get the network status
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        // check if GPS or network providers are available
+        if(!isGPSEnabled && !isNetworkEnabled) {
+            showSettingsAlert();
+        }
+        else {
+            canGetLocation = true;
+            // First get the location from the network provider
+            if(isNetworkEnabled) {
+                try {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DIST_CHANGE_FOR_UPDATES,
+                            this);
+                }
+                catch (SecurityException e) {
+                    e.printStackTrace();
+                    Log.d(DEBUG_TAG, e.getMessage());
+                }
+                Log.d(DEBUG_TAG, "Network");
+                if(locationManager != null) {
                     try {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.NETWORK_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DIST_CHANGE_FOR_UPDATES,
-                                this);
-                    }
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        }
                     catch (SecurityException e) {
                         e.printStackTrace();
-                        Log.v(DEBUG_TAG, e.getMessage());
+                        Log.d(DEBUG_TAG, e.getMessage());
                     }
-                    Log.d(DEBUG_TAG, "Network");
-                    if(locationManager != null) {
-                        try {
-                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        }
-                        catch (SecurityException e) {
-                            e.printStackTrace();
-                            Log.v(DEBUG_TAG, e.getMessage());
-                        }
-                        if(null != location) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }
-                }
-                // if GPS is enabled get lat/long using GPS services
-                if(isGPSEnabled) {
-                    if(null == location) {
-                        try {
-                            locationManager.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER,
-                                    MIN_TIME_BW_UPDATES,
-                                    MIN_DIST_CHANGE_FOR_UPDATES,
-                                    this);
-                        }
-                        catch (SecurityException e) {
-                            e.printStackTrace();
-                            Log.v(DEBUG_TAG, e.getMessage());
-                        }
-                        Log.d(DEBUG_TAG, "GPS Enabled");
-                        if(null != locationManager) {
-                            try {
-                                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            }
-                            catch (SecurityException e) {
-                                Log.v(DEBUG_TAG, e.getMessage());
-                                e.printStackTrace();
-                            }
-                            if(null != location) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            }
-                        }
-                        else {
-                            Log.v(DEBUG_TAG, "locationmanager is null");
-                        }
+                    if(null != location) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
                     }
                 }
             }
+            // if GPS is enabled get lat/long using GPS services
+            if(isGPSEnabled) {
+                try {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DIST_CHANGE_FOR_UPDATES,
+                            this);
+                }
+                catch (SecurityException e) {
+                    e.printStackTrace();
+                    Log.d(DEBUG_TAG, e.getMessage());
+                }
+                Log.d(DEBUG_TAG, "GPS Enabled");
+                if(null != locationManager) {
+                    try {
+                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    }
+                    catch (SecurityException e) {
+                        Log.v(DEBUG_TAG, e.getMessage());
+                        e.printStackTrace();
+                    }
+                    if(null != location) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                }
+                else {
+                    Log.d(DEBUG_TAG, "locationmanager is null");
+                }
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            Log.v(DEBUG_TAG, e.getMessage());
-        }
-
         return location;
     }
 
@@ -161,7 +149,7 @@ public class GPS_Tracker extends Service implements LocationListener {
         return canGetLocation;
     }
 
-    // function to show settings alert dialong
+    // function to show settings alert dialog
     // on pressing settings button will launch settings options
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);

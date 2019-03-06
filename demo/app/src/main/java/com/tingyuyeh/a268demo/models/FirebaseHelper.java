@@ -84,6 +84,7 @@ public class FirebaseHelper {
     private Map<String, Problem> mapOfAllProblems;
 
     static private FirebaseHelper instance = null;
+
     private FirebaseHelper(Callback cb) {
         // initialize
         database = FirebaseDatabase.getInstance();
@@ -183,6 +184,7 @@ public class FirebaseHelper {
             instance = new FirebaseHelper(cb);
         }
     }
+
     public static FirebaseHelper getInstance() {
 
         return instance;
@@ -204,6 +206,7 @@ public class FirebaseHelper {
     public String getEmail() {
         return user.getEmail();
     }
+
     public void getAllProblems(final Callback cb) {
         problemRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -268,7 +271,6 @@ public class FirebaseHelper {
         return true;
     }
 
-
     public boolean decreaseVote(Problem problem) {
         if (retrievedUser._voteStatusForEachProblem.containsKey(problem._problemId)) {
             int curVal = retrievedUser._voteStatusForEachProblem.get(problem._problemId);
@@ -289,7 +291,6 @@ public class FirebaseHelper {
         return true;
     }
 
-
     public boolean addFavourite(Problem problem) {
         if (!retrievedUser._idOfFavouriteProblems.contains(problem._problemId)) {
             retrievedUser._idOfFavouriteProblems.add(problem._problemId);
@@ -299,6 +300,7 @@ public class FirebaseHelper {
             return false;
         }
     }
+
     public boolean removeFavourite(Problem problem) {
         if (retrievedUser._idOfFavouriteProblems.contains(problem._problemId)) {
             retrievedUser._idOfFavouriteProblems.remove(problem._problemId);
@@ -349,6 +351,10 @@ public class FirebaseHelper {
     }
 
     public void uploadUserPhoto(final Uri file, final Context context) {
+
+
+        Log.d("FIREBASEHELPER_UPLOAD_USER", "In uploadUserPhoto with Uri: " + file.toString());
+
         final StorageReference storeRef = mStorageRef.child("images/" + user.getUid() + "/" + file.getPath());
         UploadTask uploadTask = storeRef.putFile(file);
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {

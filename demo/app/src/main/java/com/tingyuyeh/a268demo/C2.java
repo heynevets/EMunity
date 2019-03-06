@@ -36,22 +36,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class C2 extends AppCompatActivity {
-    private static final String DEBUG_TAG = "C2";
-
+    private static final String DEBUG_TAG = "C2_DEBUG";
     private static final int REQUEST_TAKE_PHOTO = 1;
-    private ImageView imageView;
-    private static String currentPhotoPath;
-    private Button reportButton;
-    private EditText titleEditText, descriptionEditText;
     private static final int REQUEST_CODE_PERMISSION = 2;
     private static boolean INITIAL_LAUNCH = true;
-    private String pictureAction = "";
+    private static String currentPhotoPath;
+    private ImageView imageView;
+    private Button reportButton;
+    private EditText titleEditText, descriptionEditText;
+    private String callingActivity = "";
 
     // GPS tracker class
-    GPS_Tracker gps;
+    private GPS_Tracker gps;
+    private Uri photoURI;
 
-
-    Uri photoURI;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,114 +64,97 @@ public class C2 extends AppCompatActivity {
         }
 
         gps = new GPS_Tracker(this);
+
         reportButton = findViewById(R.id.reportButton);
         imageView = findViewById(R.id.imageView);
         titleEditText = findViewById(R.id.problemTitleEditText);
         descriptionEditText = findViewById(R.id.problemDescriptionEditText);
 
-
         // Get the transferred data from source activity.
         Intent intent = getIntent();
-        pictureAction = intent.getStringExtra("message");
-        descriptionEditText.setText(pictureAction);
+        callingActivity = intent.getStringExtra("message");
 
-
-        // set the on click listener for the report problem button
-        reportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reportProblem();
-            }
-        });
-
-        // set the action for if the user clicks the image again
-        // allow them to take another picture
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
-
-        if(INITIAL_LAUNCH) {
-
-            // automatically start the camera intent when the user enters activity C2
+        // check if the calling activity is C0 or C3
+        // activity C4 just needs to use the camera feature
+        if(callingActivity.equals("C3")) {
             dispatchTakePictureIntent();
-            INITIAL_LAUNCH = false;
-
         }
         else {
-            setImage();
+            // set the on click listener for the report problem button
+            reportButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reportProblem();
+                }
+            });
+
+            // set the action for if the user clicks the image again
+            // allow them to take another picture
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchTakePictureIntent();
+                }
+            });
+
+            if (INITIAL_LAUNCH) {
+                // automatically start the camera intent when the user enters activity C2
+                dispatchTakePictureIntent();
+                INITIAL_LAUNCH = false;
+            } else {
+                setImage();
+            }
         }
     }
 
-
-
     void reportProblem() {
-        Log.d(DEBUG_TAG, "report");
-        try {
-            // get the problem title and description
-            String title = titleEditText.getText().toString();
-            String description = descriptionEditText.getText().toString();
-            if (0 == title.length()) {
-                toastMessage("Please enter a title for the problem");
-                return;
-            } else if (0 == description.length()) {
-                toastMessage("Please enter a description for the problem");
-                return;
-            }
-
-
-            Location l = gps.getLocation();
-            Double latitude = 0.0;
-            Double longitude = 0.0;
-            // check for GPS coordinates
-            if (gps.canGetLocation()) {
-                latitude = l.getLatitude();
-                longitude = l.getLongitude();
+        Log.d(DEBUG_TAG, "Starting report problem function");
+        // get the problem title and description
+        String title = titleEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
+        if (0 == title.length()) {
+            toastMessage("Please enter a title for the problem");
+            return;
+        } else if (0 == description.length()) {
+            toastMessage("Please enter a description for the problem");
+            return;
+        }
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+        // check for GPS coordinates
+        if (gps.canGetLocation()) {
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
 
                 toastMessage("Lat: " + latitude.toString() + "\nLong: " + longitude.toString());
-            } else {
-                gps.showSettingsAlert();
-                return;
-            }
-            Double[] coordinates = {latitude, longitude};
+        }
+        else {
+            gps.showSettingsAlert();
+            return;
+        }
+        Double[] coordinates = {latitude, longitude};
 
-            // call FirebaseHelper singleton and pass it the required information
-            FirebaseHelper.getInstance().createProblem(photoURI, coordinates, title, description, C2.this);
-        }
-        catch (Exception e) {
-            Log.v("REPORT_PROBLEM", e.getMessage());
-        }
+        // call FirebaseHelper singleton and pass it the required information
+        FirebaseHelper.getInstance().createProblem(photoURI, coordinates, title, description, C2.this);
+
         // reset the initial launch
         INITIAL_LAUNCH = true;
 
         this.finish();
-
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(REQUEST_TAKE_PHOTO == requestCode && resultCode == RESULT_OK) {
-
-            if(pictureAction != "") {
-                setImage();
-            }
-            else {
-                Intent intent = new Intent();
-                intent.putExtra("message_return", currentPhotoPath);
-                setResult(RESULT_OK, intent);
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        INITIAL_LAUNCH = true;
-    }
-
+    // this function sets the image view of C2
     private void setImage() {
+        // check if the calling activity is C3
+        if(callingActivity.equals("C3")) {
+            Log.d(DEBUG_TAG, "Calling Fire base Helper for user upload photo");
+            // only need to call the FirebaseHelper function
+            FirebaseHelper.getInstance().uploadUserPhoto(photoURI, this);
+            this.finish();
+        }
+
+        // otherwise let the function operate normally
+
         // resize the picture for the image view using the full image
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -194,7 +175,7 @@ public class C2 extends AppCompatActivity {
             }
             catch (IOException ex) {
                 Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-                Log.v(DEBUG_TAG, ex.getMessage());
+                Log.d(DEBUG_TAG, ex.getMessage());
             }
             // Continue only if the File was successfully created
             if(null != photoFile) {
@@ -223,11 +204,21 @@ public class C2 extends AppCompatActivity {
         return image;
     }
 
-
     // function to display toast messages
     public void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(REQUEST_TAKE_PHOTO == requestCode && resultCode == RESULT_OK) {
+            setImage();
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        INITIAL_LAUNCH = true;
+    }
 }
