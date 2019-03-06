@@ -356,7 +356,9 @@ public class FirebaseHelper {
         Log.d("FIREBASEHELPER_UPLOAD_USER", "In uploadUserPhoto with Uri: " + file.toString());
 
         final StorageReference storeRef = mStorageRef.child("images/" + user.getUid() + "/" + file.getPath());
-        UploadTask uploadTask = storeRef.putFile(file);
+//        UploadTask uploadTask = storeRef.putFile(file);
+        UploadTask uploadTask = storeRef.putBytes(compressFileByUri(context, file)); // by byte[]
+
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -486,7 +488,7 @@ public class FirebaseHelper {
         return decodedByte;
     }
     private static Bitmap createThumbnail(Context context, Uri file) {
-        final int THUMBNAIL_SIZE = 64;
+        final int THUMBNAIL_SIZE = 100;
 
         final InputStream imageStream;
         Bitmap selectedImage;
