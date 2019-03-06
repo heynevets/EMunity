@@ -11,4 +11,5 @@ public abstract class Callback {
     public void onSuccess(List<Problem> problems){}
     public void onFailure(Exception e){}
     public void gpsLocationChange(Location location){};
+    public void onProblemListChange(Problem problem){};
 }

@@ -37,16 +37,15 @@ public class NavigationHelper {
         header_email_text.setText(FirebaseHelper.getInstance().getEmail());
         if (user._thumbnail != null && !user._thumbnail.equals("")) {
             header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-            header_profile_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    drawer.closeDrawers();
-                    Intent intent = new Intent(applicationContext, C3.class);
-                    currentContext.startActivity(intent);
-                }
-            });
         }
-
+        header_profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.closeDrawers();
+                Intent intent = new Intent(applicationContext, C3.class);
+                currentContext.startActivity(intent);
+            }
+        });
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override

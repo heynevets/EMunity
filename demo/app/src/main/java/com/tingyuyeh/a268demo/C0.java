@@ -76,7 +76,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
 // from sneha
 
-    private GoogleMap mMap;
+    private GoogleMap mMap = null;
     private ChildEventListener mChildEventListener;
     private DatabaseReference mProblems;
     Marker marker;
@@ -93,6 +93,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     private Marker userLocation = null;
 
     ImageButton button_currentLocation;
+    boolean mapIsReady = false;
 
 //    NestedScrollView nestedScrollView;
     @Override
@@ -129,7 +130,25 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 //        });
         List<Problem> problems = FirebaseHelper.getInstance().getAllProblems();
         listAdapter = new ProblemList (C0.this, problems);
-        FirebaseHelper.getInstance().registerProblemListener(listAdapter);
+        FirebaseHelper.getInstance().registerProblemListener(new Callback() {
+            @Override
+            public void onProblemListChange(Problem p) {
+                if (mapIsReady == true) {
+                    LatLng coord = new LatLng(p._GPS.get(0), p._GPS.get(1));
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(coord)
+                            .title(p._title)
+                            .snippet(String.format("%d people voted", p._ratings))
+                            .anchor(0.5f, 1)
+                    );
+                    marker.setTag(p);
+                    markerMap.put(p._problemId, marker);
+                    listAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+
         lv.setAdapter(listAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -275,7 +294,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
             markerMap.put(p._problemId, marker);
         }
 
-
+        mapIsReady = true;
 
     }
 

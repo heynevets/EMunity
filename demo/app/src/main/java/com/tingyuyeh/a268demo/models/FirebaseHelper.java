@@ -223,11 +223,11 @@ public class FirebaseHelper {
         return mapOfAllProblems.get(problemId);
     }
 
-    public void registerProblemListener(ProblemList listAdapter) {
+    public void registerProblemListener(Callback cb) {
         problemRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                listAdapter.notifyDataSetChanged();
+                cb.onProblemListChange(dataSnapshot.getValue(Problem.class));
             }
 
             @Override
