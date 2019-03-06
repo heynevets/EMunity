@@ -74,19 +74,14 @@ public class C4 extends AppCompatActivity {
 
 
 
+        // navbar
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         toggle.syncState();
-
-
-
-
-
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerLayout = navigationView.getHeaderView(0);
@@ -94,7 +89,7 @@ public class C4 extends AppCompatActivity {
         header_profile_image = headerLayout.findViewById(R.id.header_profile_image);
         header_email_text = headerLayout.findViewById(R.id.header_email_text);
 
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         NavigationHelper.buildNavigation(drawer,
                 C4.this,
                 navigationView,

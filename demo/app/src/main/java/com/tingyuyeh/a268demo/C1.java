@@ -2,12 +2,17 @@ package com.tingyuyeh.a268demo;
 
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +22,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.NavigationHelper;
 import com.tingyuyeh.a268demo.models.Problem;
 
 import java.util.ArrayList;
@@ -42,6 +48,10 @@ public class C1 extends AppCompatActivity {
 
     TextView backgroundText;
 
+    ImageView header_profile_image;
+    TextView header_email_text;
+
+    DrawerLayout drawer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +75,35 @@ public class C1 extends AppCompatActivity {
 
 
         backgroundText = findViewById(R.id.backgroundText);
+
+
+
+        // navbar
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        header_profile_image = headerLayout.findViewById(R.id.header_profile_image);
+        header_email_text = headerLayout.findViewById(R.id.header_email_text);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        NavigationHelper.buildNavigation(drawer,
+                C1.this,
+                navigationView,
+                header_profile_image,
+                header_email_text,
+                getApplicationContext()
+        );
+
+
+
     }
 
     @Override

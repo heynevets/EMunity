@@ -1,8 +1,12 @@
 package com.tingyuyeh.a268demo;
 
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.NavigationHelper;
 import com.tingyuyeh.a268demo.models.User;
 // user profile
 
@@ -21,6 +26,13 @@ public class C3 extends AppCompatActivity {
     ImageView profile_img;
     Button button_logout;
     private String DEBUG = "C3";
+
+
+    ImageView header_profile_image;
+    TextView header_email_text;
+
+    DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +53,34 @@ public class C3 extends AppCompatActivity {
                 startActivity(pictureIntent);
             }
         });
+
+
+
+        // navbar
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        header_profile_image = headerLayout.findViewById(R.id.header_profile_image);
+        header_email_text = headerLayout.findViewById(R.id.header_email_text);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        NavigationHelper.buildNavigation(drawer,
+                C3.this,
+                navigationView,
+                header_profile_image,
+                header_email_text,
+                getApplicationContext()
+        );
+
+
     }
 
     @Override

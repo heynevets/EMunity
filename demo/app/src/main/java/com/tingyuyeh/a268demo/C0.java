@@ -13,15 +13,21 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,6 +51,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.NavigationHelper;
 import com.tingyuyeh.a268demo.models.Problem;
 import com.tingyuyeh.a268demo.models.User;
 
@@ -59,7 +66,9 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     String DEBUG = "C0";
     ListView lv;
     ProblemList listAdapter;
+
     Map<String, Marker> markerMap = new HashMap<>();
+
 
 // from sneha
 
@@ -69,14 +78,16 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     Marker marker;
     List<Problem> problemList;
 
+    ImageView header_profile_image;
+    TextView header_email_text;
+
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c0);
         lv = findViewById(R.id.dataListView);
-
-
 
 
 
@@ -119,6 +130,40 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
         mProblems= FirebaseDatabase.getInstance().getReference("GPS");
         // mProblems.push().setValue(marker);
         problemList = new ArrayList<>();
+
+
+
+
+
+
+
+
+
+
+        // navbar
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        header_profile_image = headerLayout.findViewById(R.id.header_profile_image);
+        header_email_text = headerLayout.findViewById(R.id.header_email_text);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        NavigationHelper.buildNavigation(drawer,
+                C0.this,
+                navigationView,
+                header_profile_image,
+                header_email_text,
+                getApplicationContext()
+        );
+
 
     }
 
@@ -209,5 +254,17 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+
+        }
     }
 }
