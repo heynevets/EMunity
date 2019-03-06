@@ -24,18 +24,18 @@ android:theme="@style/ThemeOverlay.AppCompat.Dark">
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/header_email_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:paddingTop="8dp"
         android:text="EMunity"
-        android:id="@+id/header_email_text"
-        android:textColor="@color/colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/header_profile_image" />
 
 
 </android.support.constraint.ConstraintLayout>

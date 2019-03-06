@@ -71,8 +71,6 @@ public class C4 extends AppCompatActivity {
         button_favourite = findViewById(R.id.button_favourite);
 
 
-        header_profile_image = findViewById(R.id.header_profile_image);
-        header_email_text = findViewById(R.id.header_email_text);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,15 +81,35 @@ public class C4 extends AppCompatActivity {
 
         toggle.syncState();
 
-        User user = FirebaseHelper.getInstance().getUser();
-//        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
-//        if (user._thumbnail != null && !user._thumbnail.equals("")) {
-//            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-//        }
+
+
 
 
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        header_profile_image = headerLayout.findViewById(R.id.header_profile_image);
+        header_email_text = headerLayout.findViewById(R.id.header_email_text);
+
+
+        User user = FirebaseHelper.getInstance().getUser();
+        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
+        if (user._thumbnail != null && !user._thumbnail.equals("")) {
+            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+            header_profile_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), C3.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+                }
+            });
+        }
+
+
+
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
