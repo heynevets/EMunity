@@ -10,39 +10,70 @@
     android:fitsSystemWindows="true"
     android:id="@+id/drawer_layout"
     tools:openDrawer="start">
-
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_container">
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimaryDark"
+        tools:context="com.tingyuyeh.a268demo.C4">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:fitsSystemWindows="true">
+
+
+
+
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/map"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+
+                    android:layout_gravity="center"
+
+                    app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"/>
+
+
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:id="@+id/toolbar"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:elevation="4dp"/>
-
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_gravity="center"
-
-                app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
 
             <ListView
                 android:id="@+id/dataListView"
@@ -66,21 +97,39 @@
 
 
         </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="16dp"
+            app:backgroundTint="@color/colorPrimary"
+
+            app:layout_anchor="@id/appBar"
+            app:layout_anchorGravity="bottom|end"
+
+            android:id="@+id/button_currentLocation"
+            style="@style/Widget.AppCompat.Button.Borderless"
+
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_location_arrow_solid"
+            android:tint="@color/colorText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+            />
 
 
-    </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        app:menu="@menu/menu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:id="@+id/nav_view"
-        app:headerLayout="@layout/nav_header"
         android:backgroundTint="@color/colorPrimary"
-        app:menu="@menu/menu" >
-
-    </android.support.design.widget.NavigationView>
-
-    <!-- added by Sneha on 03/04 -->
-
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header" />
 </android.support.v4.widget.DrawerLayout>

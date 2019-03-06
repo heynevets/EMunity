@@ -23,13 +23,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -88,14 +91,27 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
     private Marker userLocation = null;
 
+    ImageButton button_currentLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c0);
         lv = findViewById(R.id.dataListView);
+        lv.setVerticalScrollBarEnabled(false);
 
 
-
+        button_currentLocation = findViewById(R.id.button_currentLocation);
+        button_currentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userLocation != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation.getPosition(), 12));
+                } else {
+                    Toast.makeText(C0.this, "GPS not ready yet",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
 
@@ -124,6 +140,12 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
             }
         });
+
+        ViewGroup.LayoutParams par = lv.getLayoutParams();
+        float pixels =  C0.this.getResources().getDisplayMetrics().density;
+        par.height = (int) (pixels * 80.0 * (problems.size()+1));
+        lv.setLayoutParams(par);
+        lv.requestLayout();
         // from sneha
 
 // Obtain the SupportMapFragment and get notified when the map is ready to be used.
