@@ -239,7 +239,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
 
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
 //        nestedScrollView.smoothScrollTo(0, position);
 
         lv.smoothScrollToPosition(position);
