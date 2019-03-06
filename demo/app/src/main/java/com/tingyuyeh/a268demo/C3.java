@@ -1,6 +1,7 @@
 package com.tingyuyeh.a268demo;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -116,5 +117,19 @@ public class C3 extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseHelper.MyAsyncTask task = new FirebaseHelper.MyAsyncTask(new FirebaseHelper.MyAsyncTask.TaskListener() {
+            @Override
+            public void onFinished(Bitmap result) {
+                header_profile_image.setImageBitmap(result);
+                profile_img.setImageBitmap(result);
+            }
+        });
+        task.execute(FirebaseHelper.getInstance().getUser()._imageUri);
     }
 }
