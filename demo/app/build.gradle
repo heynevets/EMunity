@@ -21,7 +21,9 @@ android {
         targetCompatibility = '1.8'
     }
 }
-
+ext {
+    supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -44,6 +46,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation 'com.android.support:design:27.1.1'
 
 }
 apply plugin: 'com.google.gms.google-services'
