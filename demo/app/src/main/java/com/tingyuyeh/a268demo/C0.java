@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -92,10 +93,15 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
     private Marker userLocation = null;
 
     ImageButton button_currentLocation;
+
+//    NestedScrollView nestedScrollView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c0);
+
+//        nestedScrollView = findViewById(R.id.nestedScrollView);
+
         lv = findViewById(R.id.dataListView);
         lv.setVerticalScrollBarEnabled(false);
 
@@ -141,11 +147,12 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
             }
         });
 
-        ViewGroup.LayoutParams par = lv.getLayoutParams();
-        float pixels =  C0.this.getResources().getDisplayMetrics().density;
-        par.height = (int) (pixels * 80.0 * (problems.size()+1));
-        lv.setLayoutParams(par);
-        lv.requestLayout();
+//        ViewGroup.LayoutParams par = lv.getLayoutParams();
+//        float pixels =  C0.this.getResources().getDisplayMetrics().density;
+//        par.height = (int) (pixels * 80.0 * (problems.size()+1));
+//        lv.setLayoutParams(par);
+//        lv.requestLayout();
+
         // from sneha
 
 // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -185,7 +192,7 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
                 // navbar
 
-                Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -233,6 +240,8 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
+//        nestedScrollView.smoothScrollTo(0, position);
+
         lv.smoothScrollToPosition(position);
 
         listAdapter.setItemSelected(position);
