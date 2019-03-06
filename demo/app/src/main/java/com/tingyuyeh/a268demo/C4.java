@@ -1,5 +1,6 @@
 package com.tingyuyeh.a268demo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.support.design.widget.NavigationView;
@@ -83,10 +84,10 @@ public class C4 extends AppCompatActivity {
         toggle.syncState();
 
         User user = FirebaseHelper.getInstance().getUser();
-        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
-        if (user._thumbnail != null && !user._thumbnail.equals("")) {
-            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-        }
+//        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
+//        if (user._thumbnail != null && !user._thumbnail.equals("")) {
+//            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+//        }
 
 
 
@@ -102,20 +103,29 @@ public class C4 extends AppCompatActivity {
                         // close drawer when item is tapped
 
                         drawer.closeDrawers();
+
+                        Intent intent = new Intent();
                         switch (menuItem.getTitle().toString()) {
+                            case "Problems":
+                                Log.d(DEBUG, "problems");
+                                intent.setClass(getApplicationContext(), C0.class);
+                                break;
                             case "Favourite":
                                 Log.d(DEBUG, "favourite");
+                                intent.setClass(getApplicationContext(), C1.class);
+                                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
                                 break;
                             case "Report":
                                 Log.d(DEBUG, "report");
+                                intent.setClass(getApplicationContext(), C2.class);
+                                intent.putExtra("message", "C0");
+                                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
                                 break;
-                            case "Problems":
-                                Log.d(DEBUG, "problems");
-                                break;
-
                             default:
+                                break;
                         }
-
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.nothing);
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
 
