@@ -6,4 +6,11 @@
     <string name="c2_title_hint"> Problem Title </string>
     <string name="c2_description_hint"> Problem Description </string>
     <string name="c2_report_problem"> Report Problem </string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_favourite">Favourite</string>
+    <string name="menu_report">Report</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_problems">Problems</string>
+
 </resources>

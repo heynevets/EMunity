@@ -2,16 +2,22 @@ package com.tingyuyeh.a268demo;
 
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
@@ -35,6 +41,12 @@ public class C4 extends AppCompatActivity {
     final String DEBUG = "C4";
 
     ImageButton button_favourite;
+
+
+    ImageView header_profile_image;
+    TextView header_email_text;
+
+    DrawerLayout drawer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +68,78 @@ public class C4 extends AppCompatActivity {
         button_action = findViewById(R.id.button_action);
 
         button_favourite = findViewById(R.id.button_favourite);
+
+
+        header_profile_image = findViewById(R.id.header_profile_image);
+        header_email_text = findViewById(R.id.header_email_text);
+
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        toggle.syncState();
+
+        User user = FirebaseHelper.getInstance().getUser();
+        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
+        if (user._thumbnail != null && !user._thumbnail.equals("")) {
+            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+        }
+
+
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+
+                        menuItem.setChecked(true);
+
+                        // close drawer when item is tapped
+
+                        drawer.closeDrawers();
+                        switch (menuItem.getTitle().toString()) {
+                            case "Favourite":
+                                Log.d(DEBUG, "favourite");
+                                break;
+                            case "Report":
+                                Log.d(DEBUG, "report");
+                                break;
+                            case "Problems":
+                                Log.d(DEBUG, "problems");
+                                break;
+
+                            default:
+                        }
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
+//
+//        drawer = findViewById(R.id.drawer_layout);
+//        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(C4.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
+
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//
+//        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        drawer = findViewById(R.id.drawer_layout);
+
     }
 
     @Override
@@ -208,5 +292,15 @@ public class C4 extends AppCompatActivity {
     void setVoteText() {
         String voting = (problem._ratings >= 0) ? "+" + problem._ratings : "-" + problem._ratings;
         text_vote.setText(voting);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+
+        }
     }
 }

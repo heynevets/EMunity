@@ -107,15 +107,20 @@ public class B1 extends AppCompatActivity {
         if (user == null) {
             // display error
         } else {
-
-            FirebaseHelper.initialize(new Callback() {
-                @Override
-                public void onComplete(boolean success) {
-                    Intent intent = new Intent(getApplicationContext(), C0.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-                }
-            });
+            if (FirebaseHelper.getInstance() != null) {
+                Intent intent = new Intent(getApplicationContext(), C0.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+            } else {
+                FirebaseHelper.initialize(new Callback() {
+                    @Override
+                    public void onComplete(boolean success) {
+                        Intent intent = new Intent(getApplicationContext(), C0.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.nothing);
+                    }
+                });
+            }
 
         }
     }
