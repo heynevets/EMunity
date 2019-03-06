@@ -2,6 +2,7 @@ package com.tingyuyeh.a268demo;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -24,6 +25,8 @@ public class ProblemList extends ArrayAdapter<Problem> {
     private List<Problem> problems;
     String DEBUG = "problemlist";
     private Integer selectedPosition = null;
+
+    Location userlocation = null;
 
     public ProblemList(Activity context,
                     List<Problem> problems) {
@@ -60,12 +63,24 @@ public class ProblemList extends ArrayAdapter<Problem> {
         TextView description = rowView.findViewById(R.id.description);
         TextView vote = rowView.findViewById(R.id.textView_vote);
 
+        TextView textView_distance = rowView.findViewById(R.id.textView_distance);
         Problem p = problems.get(position);
 
         if (selectedPosition != null && selectedPosition.equals(position)) {
             ConstraintLayout constraintLayout = rowView.findViewById(R.id.constraintLayout);
             constraintLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         }
+        if (userlocation != null) {
+            int distance = distanceInKmBetweenEarthCoordinates(userlocation.getLatitude(), userlocation.getLongitude(), p._GPS.get(0), p._GPS.get(1));
+            String display = "";
+            if (distance > 1.0) {
+                display = String.format("%2.1f km", (double) (distance));
+            } else {
+                display = String.format("%d m", (int) (distance*1000));
+            }
+            textView_distance.setText(display);
+        }
+
         title.setText(p._title);
         description.setText(p._description);
         thumbnail.setImageBitmap(FirebaseHelper.decodeImage(p._thumbnail));
@@ -75,5 +90,29 @@ public class ProblemList extends ArrayAdapter<Problem> {
 
         return rowView;
     }
+
+    public void updateUserLocation(Location userlocation) {
+        this.userlocation = userlocation;
+    }
+
+    private double degreesToRadians(double degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+    private int distanceInKmBetweenEarthCoordinates(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadiusKm = 6371.0;
+
+        double dLat = degreesToRadians(lat2-lat1);
+        double dLon = degreesToRadians(lon2-lon1);
+
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
+
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return (int) (earthRadiusKm * c);
+    }
+
 }
 

@@ -181,6 +181,9 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
                             .anchor(0.5f, 1)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(templatlng, 12));
+
+                    listAdapter.updateUserLocation(location);
+                    listAdapter.notifyDataSetChanged();
                 } else {
                     LatLng coord = new LatLng(location.getLatitude(), location.getLongitude());
                     userLocation.setPosition(coord);
