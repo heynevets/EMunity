@@ -437,8 +437,8 @@ public class FirebaseHelper {
     public void createProblem(final Uri file, final Double[] coord, final String title, final String description, final Context context) {
         final StorageReference storeRef = mStorageRef.child("images/" + user.getUid() + "/" + file.getPath());
 
-        UploadTask uploadTask = storeRef.putFile(file); // by uri
-//        UploadTask uploadTask = storeRef.putBytes(compressFileByUri(context, file)); // by byte[]
+//        UploadTask uploadTask = storeRef.putFile(file); // by uri
+        UploadTask uploadTask = storeRef.putBytes(compressFileByUri(context, file)); // by byte[]
 
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -510,7 +510,7 @@ public class FirebaseHelper {
             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            selectedImage.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            selectedImage.compress(Bitmap.CompressFormat.JPEG, 50, baos);
             byte[] data = baos.toByteArray();
 
             return data;

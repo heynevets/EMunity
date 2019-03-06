@@ -160,7 +160,12 @@ public class C2 extends AppCompatActivity {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, options);
 
-        imageView.setImageBitmap(bitmap);
+        // need this to handle high definition
+
+        int nh = (int) ( bitmap.getHeight() * (800.0 / bitmap.getWidth()) );
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, nh, true);
+
+        imageView.setImageBitmap(scaledBitmap);
     }
 
     // create intent to take the picture
