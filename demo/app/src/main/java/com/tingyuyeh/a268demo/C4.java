@@ -1,5 +1,6 @@
 package com.tingyuyeh.a268demo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -10,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +20,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
+import com.tingyuyeh.a268demo.models.NavigationHelper;
 import com.tingyuyeh.a268demo.models.Problem;
 import com.tingyuyeh.a268demo.models.User;
 
@@ -72,7 +74,7 @@ public class C4 extends AppCompatActivity {
 
 
 
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -93,63 +95,15 @@ public class C4 extends AppCompatActivity {
         header_email_text = headerLayout.findViewById(R.id.header_email_text);
 
 
-        User user = FirebaseHelper.getInstance().getUser();
-        header_email_text.setText(FirebaseHelper.getInstance().getEmail());
-        if (user._thumbnail != null && !user._thumbnail.equals("")) {
-            header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-            header_profile_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), C3.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-                }
-            });
-        }
+        NavigationHelper.buildNavigation(drawer,
+                C4.this,
+                navigationView,
+                header_profile_image,
+                header_email_text,
+                getApplicationContext()
+        );
 
 
-
-
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-
-                        menuItem.setChecked(true);
-
-                        // close drawer when item is tapped
-
-                        drawer.closeDrawers();
-
-                        Intent intent = new Intent();
-                        switch (menuItem.getTitle().toString()) {
-                            case "Problems":
-                                Log.d(DEBUG, "problems");
-                                intent.setClass(getApplicationContext(), C0.class);
-                                break;
-                            case "Favourite":
-                                Log.d(DEBUG, "favourite");
-                                intent.setClass(getApplicationContext(), C1.class);
-                                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-                                break;
-                            case "Report":
-                                Log.d(DEBUG, "report");
-                                intent.setClass(getApplicationContext(), C2.class);
-                                intent.putExtra("message", "C0");
-                                overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-                                break;
-                            default:
-                                break;
-                        }
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.nothing);
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
-                        return true;
-                    }
-                });
 
 //
 //        drawer = findViewById(R.id.drawer_layout);
