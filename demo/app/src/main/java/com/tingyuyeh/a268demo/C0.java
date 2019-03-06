@@ -83,6 +83,11 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
     private DrawerLayout drawer;
 
+    GPS_Tracker gps;
+    boolean gpsInitialized = false;
+
+    private Marker userLocation = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,16 +138,32 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
 
 
 
+        // gps
+        gps = new GPS_Tracker(C0.this, new Callback() {
+            @Override
+            public void gpsLocationChange(Location location) {
+                super.gpsLocationChange(location);
+                if (!gpsInitialized) {
+                    gpsInitialized = true;
+                    LatLng templatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                    userLocation = mMap.addMarker(new MarkerOptions()
+                            .title("You Are Here")
+                            .position(templatlng)
+                            .anchor(0.5f, 1)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(templatlng, 12));
+                } else {
+                    LatLng coord = new LatLng(location.getLatitude(), location.getLongitude());
+                    userLocation.setPosition(coord);
+
+                }
+            }
+        });
 
 
+                // navbar
 
-
-
-
-
-        // navbar
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+                Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -219,19 +240,21 @@ public class C0 extends AppCompatActivity implements OnMapReadyCallback,Location
             marker.setTag(p);
             markerMap.put(p._problemId, marker);
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 12));
+
+
+
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Problem p = (Problem) marker.getTag();
-        int position = listAdapter.getItemPosition(p._problemId);
+        if (marker.getTag() != null) {
+            Problem p = (Problem) marker.getTag();
+            int position = listAdapter.getItemPosition(p._problemId);
+            Log.d(DEBUG, "scroll to : " + position);
+            zoomInProblem(position);
+        }
         marker.showInfoWindow();
-
-        Log.d(DEBUG, "scroll to : " + position);
-
-        zoomInProblem(position);
 
         return false;
     }

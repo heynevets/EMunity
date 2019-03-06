@@ -13,6 +13,8 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.tingyuyeh.a268demo.models.Callback;
+
 public class GPS_Tracker extends Service implements LocationListener {
     private static final String DEBUG_TAG = "GPS_TRACKER";
     private final Context mContext;
@@ -25,6 +27,10 @@ public class GPS_Tracker extends Service implements LocationListener {
 
     // flag for location status
     boolean canGetLocation = false;
+
+
+    private Callback mcb = null;
+
 
     Location location;
     double latitude;
@@ -44,6 +50,11 @@ public class GPS_Tracker extends Service implements LocationListener {
         getLocation();
     }
 
+    public GPS_Tracker(Context context, Callback cb) {
+        mcb = cb;
+        mContext = context;
+        getLocation();
+    }
     public Location getLocation() {
         // initialize the location manager
         locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -176,6 +187,12 @@ public class GPS_Tracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
+        if (mcb != null) {
+            mcb.gpsLocationChange(location);
+        }
 
     }
 
