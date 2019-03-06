@@ -126,10 +126,11 @@ public class C3 extends AppCompatActivity {
         FirebaseHelper.MyAsyncTask task = new FirebaseHelper.MyAsyncTask(new FirebaseHelper.MyAsyncTask.TaskListener() {
             @Override
             public void onFinished(Bitmap result) {
-                header_profile_image.setImageBitmap(result);
+
                 profile_img.setImageBitmap(result);
             }
         });
         task.execute(FirebaseHelper.getInstance().getUser()._imageUri);
+        header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(FirebaseHelper.getInstance().getUser()._thumbnail));
     }
 }
