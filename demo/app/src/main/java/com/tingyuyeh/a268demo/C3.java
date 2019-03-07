@@ -74,7 +74,14 @@ public class C3 extends AppCompatActivity {
                         User user = FirebaseHelper.getInstance().getUser();
 
                         if (user._thumbnail != null && !user._thumbnail.equals("")) {
-                            profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+//                            profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+                            FirebaseHelper.MyAsyncTask task = new FirebaseHelper.MyAsyncTask(new FirebaseHelper.MyAsyncTask.TaskListener() {
+                                @Override
+                                public void onFinished(Bitmap result) {
+                                    profile_img.setImageBitmap(result);
+                                }
+                            });
+                            task.execute(FirebaseHelper.getInstance().getUser()._imageUri);
                         }
                     }
                 });
@@ -133,14 +140,14 @@ public class C3 extends AppCompatActivity {
         sb.append((min > 1) ? " minutes" : " minute");
         textView_totalTime.setText(sb.toString());
         if (user._thumbnail != null && !user._thumbnail.equals("")) {
-            profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-//            FirebaseHelper.MyAsyncTask task = new FirebaseHelper.MyAsyncTask(new FirebaseHelper.MyAsyncTask.TaskListener() {
-//                @Override
-//                public void onFinished(Bitmap result) {
-//                    profile_img.setImageBitmap(result);
-//                }
-//            });
-//            task.execute(FirebaseHelper.getInstance().getUser()._imageUri);
+//            profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+            FirebaseHelper.MyAsyncTask task = new FirebaseHelper.MyAsyncTask(new FirebaseHelper.MyAsyncTask.TaskListener() {
+                @Override
+                public void onFinished(Bitmap result) {
+                    profile_img.setImageBitmap(result);
+                }
+            });
+            task.execute(FirebaseHelper.getInstance().getUser()._imageUri);
         }
 
         button_logout.setOnClickListener(new View.OnClickListener() {
