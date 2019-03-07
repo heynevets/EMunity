@@ -71,7 +71,7 @@ public class ProblemList extends ArrayAdapter<Problem> {
             constraintLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         }
         if (userlocation != null) {
-            int distance = distanceInKmBetweenEarthCoordinates(userlocation.getLatitude(), userlocation.getLongitude(), p._GPS.get(0), p._GPS.get(1));
+            double distance = distanceInKmBetweenEarthCoordinates(userlocation.getLatitude(), userlocation.getLongitude(), p._GPS.get(0), p._GPS.get(1));
             String display = "";
             if (distance > 1.0) {
                 display = String.format("%2.1f km", (double) (distance));
@@ -99,7 +99,7 @@ public class ProblemList extends ArrayAdapter<Problem> {
         return degrees * Math.PI / 180;
     }
 
-    private int distanceInKmBetweenEarthCoordinates(double lat1, double lon1, double lat2, double lon2) {
+    private double distanceInKmBetweenEarthCoordinates(double lat1, double lon1, double lat2, double lon2) {
         double earthRadiusKm = 6371.0;
 
         double dLat = degreesToRadians(lat2-lat1);
@@ -111,7 +111,7 @@ public class ProblemList extends ArrayAdapter<Problem> {
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return (int) (earthRadiusKm * c);
+        return earthRadiusKm * c;
     }
 
 }
