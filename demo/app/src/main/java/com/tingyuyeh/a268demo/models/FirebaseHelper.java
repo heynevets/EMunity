@@ -83,8 +83,17 @@ public class FirebaseHelper {
     private List<Problem> listOfProblems;
     private Map<String, Problem> mapOfAllProblems;
 
+
+
     static private FirebaseHelper instance = null;
 
+    private Callback userPhotoCb;
+
+    public boolean userPhotoUploading = false;
+
+    public void setUserPhotoCb(Callback callback) {
+        userPhotoCb = callback;
+    }
     private FirebaseHelper(Callback cb) {
         // initialize
         database = FirebaseDatabase.getInstance();
@@ -379,6 +388,11 @@ public class FirebaseHelper {
                     retrievedUser._thumbnail = encodedImage;
                     retrievedUser._imageUri = downloadURL;
                     userRef.child(user.getUid()).setValue(retrievedUser);
+                    Log.d("C3_onActivityResult", "User upload photo finish");
+
+                    FirebaseHelper.getInstance().userPhotoUploading = false;
+                    userPhotoCb.onComplete(true);
+
                 } else {
                 }
             }

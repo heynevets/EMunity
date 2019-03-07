@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tingyuyeh.a268demo.models.Callback;
 import com.tingyuyeh.a268demo.models.FirebaseHelper;
 import com.tingyuyeh.a268demo.models.NavigationHelper;
 import com.tingyuyeh.a268demo.models.User;
@@ -50,9 +51,35 @@ public class C3 extends AppCompatActivity {
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Intent pictureIntent = new Intent(getApplicationContext(), C2.class);
                 pictureIntent.putExtra("message", "C3");
                 startActivityForResult(pictureIntent, REQUEST_TAKE_PHOTO);
+
+                FirebaseHelper.getInstance().setUserPhotoCb(new Callback(){
+                    @Override
+                    public void onComplete(boolean success) {
+                        super.onComplete(success);
+                        Log.d("C3_onActivityResult", "I hear ya");
+                        NavigationView navigationView = findViewById(R.id.nav_view);
+                        getSupportActionBar().setDisplayShowTitleEnabled(false);
+                        NavigationHelper.buildNavigation(drawer,
+                                C3.this,
+                                navigationView,
+                                header_profile_image,
+                                header_email_text,
+                                getApplicationContext()
+                        );
+                        User user = FirebaseHelper.getInstance().getUser();
+
+                        if (user._thumbnail != null && !user._thumbnail.equals("")) {
+                            profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+                        }
+                    }
+                });
+
+
             }
         });
 
@@ -157,21 +184,7 @@ public class C3 extends AppCompatActivity {
 
 
 
-            NavigationView navigationView = findViewById(R.id.nav_view);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            NavigationHelper.buildNavigation(drawer,
-                    C3.this,
-                    navigationView,
-                    header_profile_image,
-                    header_email_text,
-                    getApplicationContext()
-            );
 
-            User user = FirebaseHelper.getInstance().getUser();
-
-            if (user._thumbnail != null && !user._thumbnail.equals("")) {
-                profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
-            }
 
 
 

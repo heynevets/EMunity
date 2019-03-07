@@ -12,4 +12,5 @@ public abstract class Callback {
     public void onFailure(Exception e){}
     public void gpsLocationChange(Location location){};
     public void onProblemListChange(Problem problem){};
+
 }
