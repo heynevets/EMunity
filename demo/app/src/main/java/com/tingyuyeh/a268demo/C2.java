@@ -121,8 +121,9 @@ public class C2 extends AppCompatActivity {
             toastMessage("Please enter a description for the problem");
             return;
         }
-        Double latitude = 0.0;
-        Double longitude = 0.0;
+        // set default coordinates to Santa Clara
+        Double latitude = 37.3496;
+        Double longitude = 121.9390;
         // check for GPS coordinates
         if (gps.canGetLocation()) {
                 latitude = gps.getLatitude();
