@@ -26,6 +26,7 @@ public class C3 extends AppCompatActivity {
     TextView textView_description;
     ImageView profile_img;
     Button button_logout;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private String DEBUG = "C3";
 
 
@@ -51,7 +52,7 @@ public class C3 extends AppCompatActivity {
             public void onClick(View v) {
                 Intent pictureIntent = new Intent(getApplicationContext(), C2.class);
                 pictureIntent.putExtra("message", "C3");
-                startActivity(pictureIntent);
+                startActivityForResult(pictureIntent, REQUEST_TAKE_PHOTO);
             }
         });
 
@@ -142,4 +143,40 @@ public class C3 extends AppCompatActivity {
 //        }
 //        header_profile_image.setImageBitmap(FirebaseHelper.decodeImage(FirebaseHelper.getInstance().getUser()._thumbnail));
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d("C3_onActivityResult", "In C3's onActivityResult");
+
+        if(REQUEST_TAKE_PHOTO == requestCode && resultCode == RESULT_OK) {
+
+            Log.d("C3_onActivityResult", "Inside (REQUEST_TAKE_PHOTO == requestCode && resultCode == RESULT_OK)");
+
+
+
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            NavigationHelper.buildNavigation(drawer,
+                    C3.this,
+                    navigationView,
+                    header_profile_image,
+                    header_email_text,
+                    getApplicationContext()
+            );
+
+            User user = FirebaseHelper.getInstance().getUser();
+
+            if (user._thumbnail != null && !user._thumbnail.equals("")) {
+                profile_img.setImageBitmap(FirebaseHelper.decodeImage(user._thumbnail));
+            }
+
+
+
+
+        }
+    }
+
 }

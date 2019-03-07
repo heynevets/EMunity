@@ -1,6 +1,7 @@
 package com.tingyuyeh.a268demo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -150,6 +152,9 @@ public class C2 extends AppCompatActivity {
             Log.d(DEBUG_TAG, "Calling Fire base Helper for user upload photo");
             // only need to call the FirebaseHelper function
             FirebaseHelper.getInstance().uploadUserPhoto(photoURI, this);
+            // send results to C3 letting it know that picture has been taken
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_OK, resultIntent);
             this.finish();
         }
 
