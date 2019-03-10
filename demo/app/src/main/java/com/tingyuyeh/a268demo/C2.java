@@ -126,10 +126,11 @@ public class C2 extends AppCompatActivity {
         Double longitude = 121.9390;
         // check for GPS coordinates
         if (gps.canGetLocation()) {
+            if(0 != gps.getLatitude() && 0 != gps.getLongitude()) {
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
-
-                toastMessage("Lat: " + latitude.toString() + "\nLong: " + longitude.toString());
+            }
+            toastMessage("Lat: " + latitude.toString() + "\nLong: " + longitude.toString());
         }
         else {
             gps.showSettingsAlert();
